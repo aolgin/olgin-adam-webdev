@@ -2,9 +2,98 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>New Website</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../css/style.css" rel="stylesheet"/>
+    <link href="../css/custom.css" rel="stylesheet"/>
 </head>
 <body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-text pull-left">
+                <a href="../user/profile.html" class="navbar-link">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+            </div>
+            <div class="navbar-text pull-right">
+                <a href="website-list.html" class="navbar-link">
+                  <span class="glyphicon glyphicon-ok">
+                  </span>
+                </a>
+            </div>
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    New Website
+                </a>
+            </div>
+        </div>
+    </nav>
 
+    <div class="container-fluid">
+        <div class="col-sm-4 hidden-xs">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="../page/page-list.html">Address Book App</a>
+                    <div class="pull-right">
+                        <a href="website-edit.html">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </a>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <a href="../page/page-list.html">Blogger</a>
+                    <div class="pull-right">
+                        <a href="website-edit.html">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </a>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <a href="../page/page-list.html">Blogging App</a>
+                    <div class="pull-right">
+                        <a href="website-edit.html">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </a>
+                    </div>
+                </li>
+                <li class="list-group-item">
+                    <a href="../page/page-list.html">Script Testing App</a>
+                    <div class="pull-right">
+                        <a href="website-edit.html">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-sm-8 col-xs-12">
+            <form>
+                <div class="form-group">
+                    <label for="website-name">Name</label>
+                    <input type="text" class="form-control" id="website-name" placeholder="Website Name">
+                </div>
+                <div class="form-group">
+                    <label for="website-description">Description</label>
+                    <textarea class="form-control"
+                              id="website-description"
+                              placeholder="Website description"></textarea>
+                </div>
+            </form>
+            <a class="btn btn-primary btn-block"
+               href="website-list.html">Create
+            </a>
+        </div>
+    </div>
+
+    <nav class="navbar navbar-inverse navbar-fixed-bottom">
+        <div class="container-fluid">
+            <div class="navbar-text pull-right">
+                <a href="../user/profile.html">
+                    <span class="glyphicon glyphicon-user"></span>
+                </a>
+            </div>
+        </div>
+    </nav>
 </body>
 </html>
