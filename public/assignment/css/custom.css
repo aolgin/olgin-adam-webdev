@@ -25,3 +25,11 @@ body {
     margin-top: 50px;
     overflow-y: auto;
 }
+
+.ado-widget {
+    z-index: 0;
+}
+
+.ado-widget-icons {
+    z-index: 2;
+}
