@@ -1,0 +1,35 @@
+body {
+    padding-top: 60px;
+    padding-bottom: 55px;
+}
+
+.ado-left-pane {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    overflow: auto;
+    padding-top: 15px;
+    margin-bottom: 50px;
+    margin-top: 50px;
+}
+
+.ado-right-pane {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    margin-bottom: 52px;
+    margin-top: 50px;
+    overflow-y: auto;
+}
+
+.ado-widget {
+    z-index: 0;
+}
+
+.ado-widget-icons {
+    z-index: 2;
+}
