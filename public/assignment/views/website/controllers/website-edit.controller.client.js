@@ -9,10 +9,13 @@
         vm.websiteId = $routeParams['wid'];
 
         function init() {
-            vm.websites = WebsiteService.findAllWebsitesForUser(vm.userId);
+            vm.websites = WebsiteService.findWebsitesByUser(vm.userId);
             vm.website = WebsiteService.findWebsiteById(vm.websiteId);
         }
         init();
+
+        vm.deleteWebsite = deleteWebsite;
+        vm.updateWebsite = updateWebsite;
 
         function deleteWebsite() {
             WebsiteService.deleteWebsite(vm.websiteId);

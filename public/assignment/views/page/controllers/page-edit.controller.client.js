@@ -10,10 +10,13 @@
         vm.pageId = $routeParams['pid'];
 
         function init() {
-            vm.pages = PageService.findAllPagesForWebsite(vm.websiteId);
+            vm.pages = PageService.findPagesByWebsiteId(vm.websiteId);
             vm.page = PageService.findPageById(vm.pageId);
         }
         init();
+
+        vm.deletePage = deletePage;
+        vm.updatePage = updatePage;
 
         function deletePage() {
             PageService.deletePage(vm.pageId);

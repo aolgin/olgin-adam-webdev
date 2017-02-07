@@ -15,7 +15,7 @@
         ]
 
         var api = {
-            "findAllWebsitesForUser": findAllWebsitesForUser,
+            "findWebsitesByUser": findWebsitesByUser,
             "createWebsite": createWebsite,
             "deleteWebsite": deleteWebsite,
             "updateWebsite": updateWebsite,
@@ -32,7 +32,7 @@
             return null;
         }
 
-        function findAllWebsitesForUser(userId) {
+        function findWebsitesByUser(userId) {
             var sites = [];
             for (var w in websites) {
                 if (websites[w].developerId === userId) {

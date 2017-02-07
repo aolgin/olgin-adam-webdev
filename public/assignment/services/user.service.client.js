@@ -15,13 +15,36 @@
             "findUserByCredentials": findUserByCredentials,
             "findUserById": findUserById,
             "updateUser": updateUser,
-            "createUser": createUser
+            "createUser": createUser,
+            "findUserByUsername": findUserByUsername,
+            "deleteUser": deleteUser
         };
         return api;
 
+        function findUserByUsername(username) {
+            for (var u in users) { // u acts as an index here, not an object
+                var user = users[u];
+                if (user.username === username) {
+                    return angular.copy(users[u]);
+                }
+            }
+            return null;
+        }
+
+        function deleteUser(userId) {
+            for (var u in users) { // u acts as an index here, not an object
+                var user = users[u];
+                if (user._id === userId) {
+                    users.splice(u, 1);
+                    return user;
+                }
+            }
+            return null;
+        }
+
         function createUser(newUser) {
             //TODO This is currently flawed due to only failing if the combination doesn't exist. Will need to fix
-            var userExists = findUserByCredentials(newUser.username, newUser.password);
+            var userExists = findUserByUsername(newUser.username);
             if (userExists == null) {
                 var uid = new Date().getTime();
                 var newUser = {

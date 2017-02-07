@@ -13,7 +13,7 @@
         ]
 
         var api = {
-            "findAllPagesForWebsite": findAllPagesForWebsite,
+            "findPagesByWebsiteId": findPagesByWebsiteId,
             "createPage": createPage,
             "deletePage": deletePage,
             "updatePage": updatePage,
@@ -30,7 +30,7 @@
             return null;
         }
 
-        function findAllPagesForWebsite(wid) {
+        function findPagesByWebsiteId(wid) {
             var pps = [];
             for (var p in pages) {
                 if (pages[p].websiteId === wid) {
@@ -59,7 +59,7 @@
             for (var p in pages) {
                 if (pages[p]._id === pid) {
                     pages[p].name = newPage.name;
-                    pages[p].description =newPage.description;
+                    pages[p].description = newPage.description;
                 }
             }
         }
