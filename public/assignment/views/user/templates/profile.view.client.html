@@ -2,13 +2,13 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-text pull-right">
-            <a href="#" class="navbar-link">
-                      <span class="glyphicon glyphicon-ok">
-                      </span>
+            <a class="navbar-link">
+              <span class="glyphicon glyphicon-ok">
+              </span>
             </a>
         </div>
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand">
                 Profile
             </a>
         </div>
@@ -18,33 +18,58 @@
 
 <div class="container-fluid">
     <h1>Profile</h1>
+    <div class="alert alert-danger" ng-show="model.error">
+        {{model.error}}
+    </div>
+    <div class="alert alert-success" ng-show="model.message">
+        {{model.message}}
+    </div>
+
     <form>
         <div class="form-group">
             <label for="username">Username</label>
-            <input type="text" class="form-control" id="username" placeholder="Username" value="">
+            <input ng-model="model.user.username"
+                   type="text"
+                   class="form-control"
+                   id="username"
+                   placeholder="Username">
         </div>
         <div class="form-group">
             <label for="email">Email address</label>
-            <input type="email" class="form-control" id="email" placeholder="alice@wonderland.com" value="jannunzi@gmail.com">
+            <input ng-model="model.user.email"
+                   type="email"
+                   class="form-control"
+                   id="email"
+                   placeholder="alice@wonderland.com"
+                   value="jannunzi@gmail.com">
         </div>
         <div class="form-group">
             <label for="first-name">First Name</label>
-            <input type="text" class="form-control" id="first-name" placeholder="Alice" value="Jose">
+            <input ng-model="model.user.firstName"
+                   type="text"
+                   class="form-control"
+                   id="first-name"
+                   placeholder="Alice"
+                   value="Jose">
         </div>
         <div class="form-group">
             <label for="last-name">Last Name</label>
-            <input type="text" class="form-control" id="last-name" placeholder="Wonderland" value="Annunzi">
+            <input ng-model="model.user.lastName"
+                   type="text"
+                   class="form-control"
+                   id="last-name"
+                   placeholder="Wonderland"
+                   value="Annunzi">
         </div>
     </form>
 
-
-    <a class="btn btn-success btn-block"
-       href="#/profile">
+    <a class="btn btn-primary btn-block"
+       ng-click="model.update(model.user)">
         Update Information
     </a>
 
-    <a class="btn btn-primary btn-block" href="#/profile">
-        Update
+    <a class="btn btn-success btn-block" href="#/user/{{model.user._id}}/website">
+        Websites
     </a>
 
     <a class="btn btn-danger btn-block" href="#/login">
@@ -55,7 +80,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-bottom">
     <div class="container-fluid">
         <div class="navbar-text pull-right">
-            <a href="#/profile">
+            <a>
                 <span class="glyphicon glyphicon-user"></span>
             </a>
         </div>

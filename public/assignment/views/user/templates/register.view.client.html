@@ -1,7 +1,27 @@
 <div class="container-fluid">
     <h1>Register</h1>
 
+    <div ng-show="model.error" class="alert alert-warning">
+        {{model.error}}
+    </div>
+
     <form>
+        <div class="form-group">
+            <label for="register-firstname">First Name</label>
+            <input ng-model="user.firstname"
+                   type="text"
+                   class="form-control"
+                   id="register-firstname"
+                   placeholder="John"/>
+        </div>
+        <div class="form-group">
+            <label for="register-lastname">Last Name</label>
+            <input ng-model="user.lastname"
+                   type="text"
+                   class="form-control"
+                   id="register-lastname"
+                   placeholder="Smith"/>
+        </div>
         <div class="form-group">
             <label for="register-email">Email Address</label>
             <input type="text"
@@ -11,14 +31,16 @@
         </div>
         <div class="form-group">
             <label for="register-username">Username</label>
-            <input type="text"
+            <input ng-model="user.username"
+                   type="text"
                    class="form-control"
                    id="register-username"
                    placeholder="username"/>
         </div>
         <div class="form-group">
             <label for="register-pass">Password</label>
-            <input type="password"
+            <input ng-model="user.password"
+                   type="password"
                    class="form-control"
                    id="register-pass"
                    placeholder="password"/>
@@ -32,7 +54,8 @@
         </div>
     </form>
 
-    <a class="btn btn-primary btn-block" href="#/profile">
+    <a ng-click="model.register(user)"
+       class="btn btn-primary btn-block">
         Register
     </a>
 
