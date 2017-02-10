@@ -9,7 +9,7 @@
             {_id: "234", username: "bob",      password: "bob",      firstName: "Bob",    lastName: "Marley"  },
             {_id: "345", username: "charly",   password: "charly",   firstName: "Charly", lastName: "Garcia"  },
             {_id: "456", username: "jannunzi", password: "jannunzi", firstName: "Jose",   lastName: "Annunzi" }
-        ]
+        ];
 
         var api = {
             "findUserByCredentials": findUserByCredentials,
@@ -17,9 +17,18 @@
             "updateUser": updateUser,
             "createUser": createUser,
             "findUserByUsername": findUserByUsername,
-            "deleteUser": deleteUser
+            "deleteUser": deleteUser,
+            "doPasswordsMatch": doPasswordsMatch
         };
         return api;
+
+        function doPasswordsMatch(initPass, confirmPass) {
+            if (initPass != null && confirmPass != null) {
+                return initPass === confirmPass;
+            } else {
+                return false;
+            }
+        }
 
         function findUserByUsername(username) {
             for (var u in users) { // u acts as an index here, not an object
@@ -50,8 +59,9 @@
                     "_id": uid,
                     "username": newUser.username,
                     "password": newUser.password,
-                    "firstname": newUser.firstname,
-                    "lastname": newUser.lastname
+                    "email": newUser.email,
+                    "firstName": newUser.firstName,
+                    "lastName": newUser.lastName
                 };
                 users.push(newUser);
                 return uid;

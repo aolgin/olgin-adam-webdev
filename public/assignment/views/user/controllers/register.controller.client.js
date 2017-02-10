@@ -19,8 +19,10 @@ Generally speaking, always start off any angular JS using a self-contained names
             var newUserId = UserService.createUser(user);
             if (newUserId == null) {
                 vm.error = "User already exists!";
+            } else if (!UserService.doPasswordsMatch(user.password, user.confirmPass)) {
+                vm.error = "Passwords do not match";
             } else {
-                $location.url('/profile/' + newUserId);
+                $location.url('/profile/' + newUserId)
             }
         }
     }
