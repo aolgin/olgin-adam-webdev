@@ -1,12 +1,12 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-text pull-left">
-            <a href="#/user/{{model.userId}}/website/{{website._id}}/page" class="navbar-link">
+            <a href="#/user/{{model.userId}}/website/{{model.websiteId}}/page" class="navbar-link">
                 <span class="glyphicon glyphicon-chevron-left"></span>
             </a>
         </div>
         <div class="navbar-text pull-right">
-            <a href="#/user/{{model.userId}}/website/{{website._id}}/page" class="navbar-link">
+            <a href="#/user/{{model.userId}}/website/{{model.websiteId}}/page" class="navbar-link">
               <span class="glyphicon glyphicon-ok">
               </span>
             </a>
@@ -23,9 +23,11 @@
     <div class="col-sm-4 col-xs-hidden ado-left-pane">
         <ul class="list-group">
             <li ng-repeat="page in model.pages" class="list-group-item">
-                <a href="../widget/widget-list.html">Blog Post</a>
+                <a href="#/user/{{model.userId}}/website/{{model.websiteId}}/page/{{page._id}}/widget">
+                    {{page.name}}
+                </a>
                 <p class="pull-right">
-                    <a href="#/user/{{model.userId}}/website/{{model.websiteId}}/page/{{model.pageId}}">
+                    <a href="#/user/{{model.userId}}/website/{{model.websiteId}}/page/{{page._id}}">
                         <span class="glyphicon glyphicon-edit"></span>
                     </a>
                 </p>
@@ -41,12 +43,11 @@
                        type="text"
                        class="form-control"
                        id="page-name"
-                       placeholder="Page Name"
-                       value="Blog Post">
+                       placeholder="Page Name">
             </div>
             <div class="form-group">
                 <label for="page-title">Title</label>
-                <input ng-model="model.page.title"
+                <input ng-model="model.page.description"
                        type="text"
                        class="form-control"
                        id="page-title"

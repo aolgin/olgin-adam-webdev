@@ -1,0 +1,60 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-text pull-left">
+            <a href="#/user/{{model.userId}}/website/{{model.websiteId}}/page/{{model.pageId}}/widget"
+               class="navbar-link">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+        </div>
+        <div class="navbar-text pull-right">
+            <a href="#/user/{{model.userId}}/website/{{model.websiteId}}/page/{{model.pageId}}/widget"
+               class="navbar-link">
+                      <span class="glyphicon glyphicon-ok">
+                      </span>
+            </a>
+        </div>
+        <div class="navbar-header">
+            <a class="navbar-brand">
+                Widget Edit
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <form>
+        <div class="form-group">
+            <label for="header-name">Name</label>
+            <input type="text" class="form-control" id="header-name">
+        </div>
+        <div class="form-group">
+            <label for="header-text">Text</label>
+            <input type="text"
+                   class="form-control"
+                   id="header-text"
+                   placeholder="17 Things You Haven't Seen. Number 6 will surprise you!">
+        </div>
+        <div class="form-group">
+            <label for="header-width">Width</label>
+            <input type="text"
+                   class="form-control"
+                   id="header-width"
+                   placeholder="3">
+        </div>
+    </form>
+
+    <a class="btn btn-danger btn-block"
+       href="#/user/{{model.userId}}/website/{{model.websiteId}}/page/{{model.pageId}}/widget">
+        Delete
+    </a>
+</div>
+
+<nav class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container-fluid">
+        <div class="navbar-text pull-right">
+            <a href="#/profile/{{model.userId}}">
+                <span class="glyphicon glyphicon-user"></span>
+            </a>
+        </div>
+    </div>
+</nav>

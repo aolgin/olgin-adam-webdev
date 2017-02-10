@@ -17,7 +17,7 @@
         vm.createWidget = createWidget;
 
         function createWidget(newWidget) {
-            WidgetService.createWidget(newWidget);
+            WidgetService.createWidget(vm.pageId, newWidget);
             $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
         }
 

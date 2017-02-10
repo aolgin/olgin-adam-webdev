@@ -40,11 +40,16 @@
             return pps;
         }
 
-        function createPage(page, userId) {
-            page.developerId = userId;
-            page._id = (new Date().getTime());
-            page.created = new Date();
-            pages.push(page);
+        function createPage(page, websiteId) {
+            var newPage = {
+                "name": page.name,
+                "description": page.title,
+                "_id": (new Date().getTime()),
+                "websiteId": websiteId
+            };
+            //page.websiteId = websiteId;
+            //page._id = (new Date().getTime());
+            pages.push(newPage);
         }
 
         function deletePage(pid) {
