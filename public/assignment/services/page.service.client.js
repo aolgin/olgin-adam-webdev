@@ -44,11 +44,9 @@
             var newPage = {
                 "name": page.name,
                 "description": page.title,
-                "_id": (new Date().getTime()),
+                "_id": String(new Date().getTime()),
                 "websiteId": websiteId
             };
-            //page.websiteId = websiteId;
-            //page._id = (new Date().getTime());
             pages.push(newPage);
         }
 

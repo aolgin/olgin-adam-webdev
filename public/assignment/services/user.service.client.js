@@ -43,10 +43,9 @@
         }
 
         function createUser(newUser) {
-            //TODO This is currently flawed due to only failing if the combination doesn't exist. Will need to fix
             var userExists = findUserByUsername(newUser.username);
             if (userExists == null) {
-                var uid = new Date().getTime();
+                var uid = String(new Date().getTime());
                 var newUser = {
                     "_id": uid,
                     "username": newUser.username,
@@ -54,7 +53,7 @@
                     "firstname": newUser.firstname,
                     "lastname": newUser.lastname
                 };
-                users.push[newUser];
+                users.push(newUser);
                 return uid;
             } else {
                 return null;

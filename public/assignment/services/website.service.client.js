@@ -12,7 +12,7 @@
             { "_id": "567", "name": "Tic Tac Toe", "developerId": "123", "description": "Lorem", "created": new Date() },
             { "_id": "678", "name": "Checkers",    "developerId": "123", "description": "Lorem", "created": new Date() },
             { "_id": "789", "name": "Chess",       "developerId": "234", "description": "Lorem", "created": new Date() }
-        ]
+        ];
 
         var api = {
             "findWebsitesByUser": findWebsitesByUser,
@@ -44,9 +44,10 @@
 
         function createWebsite(website, userId) {
             website.developerId = userId;
-            website._id = (new Date().getTime());
+            website._id = String(new Date().getTime());
             website.created = new Date();
             websites.push(website);
+            return website;
         }
 
         function deleteWebsite(wid) {
@@ -61,7 +62,7 @@
             for (var w in websites) {
                 if (websites[w]._id === wid) {
                     websites[w].name = newSite.name;
-                    websites[w].description =newSite.description;
+                    websites[w].description = newSite.description;
                 }
             }
             return null;

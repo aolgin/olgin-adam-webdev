@@ -11,6 +11,7 @@
         function init() {
             vm.websites = WebsiteService.findWebsitesByUser(vm.userId);
             vm.website = WebsiteService.findWebsiteById(vm.websiteId);
+            console.log(vm.website);
         }
         init();
 
@@ -26,6 +27,5 @@
             WebsiteService.updateWebsite(vm.websiteId, newSite);
             $location.url("/user/" + vm.userId + "/website");
         }
-        console.log(vm.websites);
     }
 })();
