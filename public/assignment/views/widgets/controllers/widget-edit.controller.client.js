@@ -11,13 +11,17 @@
         vm.widgetId = $routeParams['wgid'];
 
         function init() {
-            vm.widgets = WidgetService.findWidgetsByPageId(vm.pageId);
             vm.widget = WidgetService.findWidgetById(vm.widgetId);
         }
         init();
 
         vm.deleteWidget = deleteWidget;
         vm.updateWidget = updateWidget;
+        vm.getEditorTemplateUrl = getEditorTemplateUrl;
+
+        function getEditorTemplateUrl(type) {
+            return 'views/widgets/templates/editors/widget-' + type.toLowerCase() + '-editor.view.client.html';
+        }
 
         function deleteWidget() {
             WidgetService.deleteWidget(vm.widgetId);

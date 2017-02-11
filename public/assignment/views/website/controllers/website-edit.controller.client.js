@@ -11,7 +11,6 @@
         function init() {
             vm.websites = WebsiteService.findWebsitesByUser(vm.userId);
             vm.website = WebsiteService.findWebsiteById(vm.websiteId);
-            console.log(vm.website);
         }
         init();
 

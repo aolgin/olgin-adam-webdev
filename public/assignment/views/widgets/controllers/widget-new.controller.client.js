@@ -16,10 +16,9 @@
 
         vm.createWidget = createWidget;
 
-        function createWidget(newWidget) {
-            WidgetService.createWidget(vm.pageId, newWidget);
-            $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
+        function createWidget(type) {
+            var wgid = WidgetService.createWidget(vm.pageId, type);
+            $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget/" + wgid);
         }
-
     }
 })();

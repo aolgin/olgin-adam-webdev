@@ -1,7 +1,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-text pull-left">
-            <a href="#/user/{{model.userId}}/website/{{model.websiteId}}/page" class="navbar-link">
+            <a href="#/user/{{model.userId}}/website/{{model.websiteId}}/page/{{model.pageId}}/widget" class="navbar-link">
                 <span class="glyphicon glyphicon-chevron-left"></span>
             </a>
         </div>
@@ -13,24 +13,24 @@
         </div>
         <div class="navbar-header">
             <a class="navbar-brand" href="#">
-                Widgets
+                Edit Widget
             </a>
         </div>
     </div>
 </nav>
 
-<div ng-switch="widget.widgetType">
-    <div ng-switch-when="HEADING">
-        <ng-include src="'widget-heading.view.client.html'">
-    </div>
-    <div ng-switch-when="IMAGE">
-        <ng-include src="'widget-image.view.client.html'">
-    </div>
-    <div ng-switch-when="YOUTUBE">
-        <ng-include src="'widget-youtube.view.client.html'">
-    </div>
-</div>
+<div class="container-fluid">
+    <ng-include src="model.getEditorTemplateUrl(model.widget.widgetType)"></ng-include>
 
+    <a class="btn btn-success btn-block"
+       ng-click="model.updateWidget(widget)">
+        Update
+    </a>
+    <a class="btn btn-danger btn-block"
+       ng-click="model.deleteWidget(model.widget._id)">
+        Delete
+    </a>
+</div>
 
 <nav class="navbar navbar-inverse navbar-fixed-bottom">
     <div class="container-fluid">

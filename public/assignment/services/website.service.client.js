@@ -47,7 +47,6 @@
             website._id = String(new Date().getTime());
             website.created = new Date();
             websites.push(website);
-            return website;
         }
 
         function deleteWebsite(wid) {
