@@ -57,12 +57,19 @@
 
         function updateWidget(widgetId, newWidget) {
             for (var w in widgets) {
-                if (widgets[w]._id === widgetId) {
-                    //TODO determine how best to handle this
-                    return 0;
+                var widget = widgets[w];
+                if (widget._id === widgetId) {
+                    widget.name = newWidget.name;
+                    widget.text = newWidget.text;
+                    var type = widget.widgetType;
+                    if (type === 'YOUTUBE' || type === 'IMAGE') {
+                        widget.url = newWidget.url;
+                        widget.width = newWidget.width;
+                    } else if (type === 'HEADING') {
+                        widget.size = newWidget.size;
+                    }
                 }
             }
-            return 1;
         }
 
         function deleteWidget(widgetId) {
