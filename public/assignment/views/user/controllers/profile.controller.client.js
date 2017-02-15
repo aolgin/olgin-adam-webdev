@@ -3,7 +3,7 @@
         .module("WebAppMaker")
         .controller("profileController", profileController);
 
-    function profileController($routeParams, UserService) {
+    function profileController($routeParams, $location, UserService) {
         var vm = this;
         var userId = $routeParams['uid'];
 
@@ -13,6 +13,7 @@
         init();
 
         vm.update = update;
+        vm.unregister = unregister;
 
         function update (newUser) {
             var user = UserService.updateUser(userId, newUser);
@@ -21,6 +22,11 @@
             } else {
                 vm.message = "Successfully updated user information!";
             }
+        }
+
+        function unregister() {
+            var deletedUser = UserService.deleteUserById(userId);
+            $location.url('/login');
         }
     }
 })();

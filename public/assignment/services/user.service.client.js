@@ -17,7 +17,7 @@
             "updateUser": updateUser,
             "createUser": createUser,
             "findUserByUsername": findUserByUsername,
-            "deleteUser": deleteUser,
+            "deleteUserById": deleteUserById,
             "doPasswordsMatch": doPasswordsMatch
         };
         return api;
@@ -40,15 +40,16 @@
             return null;
         }
 
-        function deleteUser(userId) {
+        function deleteUserById(userId) {
             for (var u in users) { // u acts as an index here, not an object
                 var user = users[u];
                 if (user._id === userId) {
                     users.splice(u, 1);
-                    return user;
+                    //return user;
+                    break;
                 }
             }
-            return null;
+            //return null;
         }
 
         function createUser(newUser) {
