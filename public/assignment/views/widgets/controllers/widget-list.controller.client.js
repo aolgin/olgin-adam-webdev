@@ -20,7 +20,7 @@
         vm.getWidgetTemplateUrl = getWidgetTemplateUrl;
 
         function getWidgetTemplateUrl(type) {
-            return 'views/widgets/templates/widget-' + type.toLowerCase() + '.view.client.html';
+            return 'views/widgets/templates/widget-' + type + '.view.client.html';
         }
 
         function getTrustedHtml(html) {

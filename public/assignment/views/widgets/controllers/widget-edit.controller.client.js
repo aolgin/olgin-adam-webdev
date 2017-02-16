@@ -20,7 +20,7 @@
         vm.getEditorTemplateUrl = getEditorTemplateUrl;
 
         function getEditorTemplateUrl(type) {
-            return 'views/widgets/templates/editors/widget-' + type.toLowerCase() + '-editor.view.client.html';
+            return 'views/widgets/templates/editors/widget-' + type + '-editor.view.client.html';
         }
 
         function deleteWidget() {

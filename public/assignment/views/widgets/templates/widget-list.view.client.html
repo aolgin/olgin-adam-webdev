@@ -33,8 +33,29 @@
               </span>
             </a>
         </div>
+
+        <!--
+        Preferred Method
         <ng-include src="model.getWidgetTemplateUrl(widget.widgetType)"></ng-include>
-    </div>
+        -->
+
+        <!-- Method required by the rubric -->
+        <div ng-switch="widget.widgetType">
+            <div ng-switch-when="HEADING">
+                <ng-include src="'views/widgets/templates/widget-HEADING.view.client.html'"></ng-include>
+            </div>
+            <div ng-switch-when="IMAGE">
+                <ng-include src="'views/widgets/templates/widget-IMAGE.view.client.html'"></ng-include>
+            </div>
+            <div ng-switch-when="HTML">
+                <ng-include src="'views/widgets/templates/widget-HTML.view.client.html'"></ng-include>
+            </div>
+            <div ng-switch-when="YOUTUBE">
+                <ng-include src="'views/widgets/templates/widget-YOUTUBE.view.client.html'"></ng-include>
+            </div>
+        </div>
+
+        </div>
 </div>
 
 <nav class="navbar navbar-inverse navbar-fixed-bottom">
