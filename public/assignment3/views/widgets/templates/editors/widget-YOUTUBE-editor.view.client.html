@@ -1,0 +1,34 @@
+<h1>Youtube Widget Editor</h1>
+
+<form>
+    <div class="form-group">
+        <label for="video-name">Name</label>
+        <input ng-model="model.widget.name"
+               type="text"
+               class="form-control"
+               id="video-name">
+    </div>
+    <div class="form-group">
+        <label for="video-text">Text</label>
+        <input ng-model="model.widget.text"
+               type="text"
+               class="form-control"
+               id="video-text">
+    </div>
+    <div class="form-group">
+        <label for="video-url">URL</label>
+        <input ng-model="model.widget.url"
+               type="url"
+               class="form-control"
+               id="video-url"
+               placeholder="https://youtu.be/dQw4w9WgXcQ">
+    </div>
+    <div class="form-group">
+        <label for="video-width">Width</label>
+        <input ng-model="model.widget.width"
+               type="text"
+               class="form-control"
+               id="video-width"
+               placeholder="100%">
+    </div>
+</form>

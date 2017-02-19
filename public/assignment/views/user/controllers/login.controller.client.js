@@ -15,13 +15,18 @@ Generally speaking, always start off any angular JS using a self-contained names
         var vm = this; // vm as in view-model
         vm.login = login;
 
+        function init(){}
+        init();
+
         function login(user) {
-            var loginUser = UserService.findUserByCredentials(user.username, user.password);
-            if (loginUser != null) {
-                $location.url('/profile/' + loginUser._id);
-            } else {
-                vm.error = "No such user found!";
-            }
+            var promise = UserService.findUserByCredentials(user.username, user.password);
+            promise.success(function (user) {
+                if (user) {
+                    $location.url('/profile/' + user._id);
+                } else {
+                    vm.error = "No such user found!";
+                }
+            });
         }
     }
 })();

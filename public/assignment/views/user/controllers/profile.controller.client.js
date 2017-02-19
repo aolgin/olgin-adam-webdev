@@ -8,7 +8,10 @@
         var userId = $routeParams['uid'];
 
         function init() {
-            vm.user = UserService.findUserById(userId);
+            var promise = UserService.findUserById(userId);
+            promise.success(function (user) {
+                vm.user = user;
+            });
         }
         init();
 
@@ -16,17 +19,25 @@
         vm.unregister = unregister;
 
         function update (newUser) {
-            var user = UserService.updateUser(userId, newUser);
-            if (user == null) {
-                vm.error = "Unable to update user";
-            } else {
-                vm.message = "Successfully updated user information!";
-            }
+            var promise = UserService.updateUser(userId, newUser);
+            promise.success(function (status) {
+                if (status === 'OK') {
+                    vm.message = "Successfully updated user information!";
+                } else {
+                    vm.error = "Unable to update user";
+                }
+            });
         }
 
         function unregister() {
-            var deletedUser = UserService.deleteUserById(userId);
-            $location.url('/login');
+            var promise = UserService.deleteUserById(userId);
+            promise.success(function (status) {
+               if (status === 'OK') {
+                   $location.url('/login');
+               } else {
+                   vm.error = "Something went wrong unregistering the user...";
+               }
+            });
         }
     }
 })();

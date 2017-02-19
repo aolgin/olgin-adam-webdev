@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="../../../css/style.css" rel="stylesheet"/>
+    <link href="../../../css/custom.css" rel="stylesheet"/>
+    <title>Image Widget</title>
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-text pull-left">
+                <a href="widget-list.html" class="navbar-link">
+                    <span class="glyphicon glyphicon-chevron-left"></span>
+                </a>
+            </div>
+            <div class="navbar-text pull-right">
+                <a href="widget-list.html" class="navbar-link">
+                      <span class="glyphicon glyphicon-ok">
+                      </span>
+                </a>
+            </div>
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">
+                    Widget Edit
+                </a>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container">
+
+        <form>
+            <div class="form-group">
+                <label for="image-name">Name</label>
+                <input type="text" class="form-control" id="image-name">
+            </div>
+            <div class="form-group">
+                <label for="image-text">Text</label>
+                <input type="text" class="form-control" id="image-text">
+            </div>
+            <div class="form-group">
+                <label for="image-url">URL</label>
+                <input type="url" class="form-control" id="image-url" placeholder="http://cdn.xl.thumbs.canstockphoto.com/canstock2771373.jpg">
+            </div>
+            <div class="form-group">
+                <label for="image-width">Width</label>
+                <input type="text" class="form-control" id="image-width" placeholder="100%">
+            </div>
+            <div class="form-group">
+                <label for="image-file">Upload</label>
+                <input type="file" class="form-control" id="image-file">
+            </div>
+        </form>
+
+        <a class="btn btn-primary btn-block"
+           href="widget-list.html">Upload</a>
+        <a class="btn btn-danger btn-block"
+           href="widget-list.html">Delete</a>
+    </div>
+
+    <nav class="navbar navbar-inverse navbar-fixed-bottom">
+        <div class="container-fluid">
+            <div class="navbar-text pull-right">
+                <a href="../user/profile.html">
+                    <span class="glyphicon glyphicon-user"></span>
+                </a>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>

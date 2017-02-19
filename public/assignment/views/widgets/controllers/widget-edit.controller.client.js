@@ -11,7 +11,10 @@
         vm.widgetId = $routeParams['wgid'];
 
         function init() {
-            vm.widget = WidgetService.findWidgetById(vm.widgetId);
+            var promise = WidgetService.findWidgetById(vm.widgetId);
+            promise.success(function(widget) {
+               vm.widget = widget;
+            });
         }
         init();
 
@@ -24,13 +27,25 @@
         }
 
         function deleteWidget() {
-            WidgetService.deleteWidget(vm.widgetId);
-            $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
+            var promise = WidgetService.deleteWidget(vm.widgetId);
+            promise.success(function(status) {
+               if (status == 'OK') {
+                   $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
+               } else {
+                   vm.error = "An error occurred trying to delete the widget";
+               }
+            });
         }
 
         function updateWidget(newWidget) {
-            WidgetService.updateWidget(vm.widgetId, newWidget);
-            $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
+            var promise = WidgetService.updateWidget(vm.widgetId, newWidget);
+            promise.success(function(status) {
+                if (status == 'OK') {
+                    $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
+                } else {
+                    vm.error = "An error occurred trying to delete the widget";
+                }
+            });
         }
 
     }

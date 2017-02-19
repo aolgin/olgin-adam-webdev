@@ -10,8 +10,14 @@
         vm.pageId = $routeParams['pid'];
 
         function init() {
-            vm.pages = PageService.findPagesByWebsiteId(vm.websiteId);
-            vm.page = PageService.findPageById(vm.pageId);
+            var pageListPromise = PageService.findPagesByWebsiteId(vm.websiteId);
+            pageListPromise.success(function(pages) {
+                vm.pages = pages;
+            });
+            var pagePromise = PageService.findPageById(vm.pageId);
+            pagePromise.success(function(page) {
+                vm.page = page;
+            });
         }
         init();
 
@@ -19,13 +25,25 @@
         vm.updatePage = updatePage;
 
         function deletePage() {
-            PageService.deletePage(vm.pageId);
-            $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page");
+            var promise = PageService.deletePage(vm.pageId);
+            promise.success(function(status) {
+                if (status == 'OK') {
+                    $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page");
+                } else {
+                    vm.error = "An error occurred deleting the page";
+                }
+            });
         }
 
         function updatePage(newPage) {
-            PageService.updatePage(vm.pageId, newPage);
-            $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page");
+            var promise = PageService.updatePage(vm.pageId, newPage);
+            promise.success(function(status) {
+                if (status == 'OK') {
+                    $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page");
+                } else {
+                    vm.error = "An error occurred deleting the page";
+                }
+            });
         }
     }
 })();

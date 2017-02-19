@@ -10,7 +10,10 @@
         vm.pageId = $routeParams['pid'];
 
         function init() {
-            vm.widgets = WidgetService.findWidgetsByPageId(vm.pageId);
+            var promise = WidgetService.findWidgetsByPageId(vm.pageId);
+            promise.success(function(w) {
+                vm.widgets = w;
+            });
         }
         init();
 

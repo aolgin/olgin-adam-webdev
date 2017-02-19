@@ -1,0 +1,67 @@
+<div class="container-fluid">
+    <h1>Register</h1>
+
+    <div ng-show="model.error" class="alert alert-warning">
+        {{model.error}}
+    </div>
+
+    <form>
+        <div class="form-group">
+            <label for="register-firstname">First Name</label>
+            <input ng-model="user.firstName"
+                   type="text"
+                   class="form-control"
+                   id="register-firstname"
+                   placeholder="John"/>
+        </div>
+        <div class="form-group">
+            <label for="register-lastname">Last Name</label>
+            <input ng-model="user.lastName"
+                   type="text"
+                   class="form-control"
+                   id="register-lastname"
+                   placeholder="Smith"/>
+        </div>
+        <div class="form-group">
+            <label for="register-email">Email Address</label>
+            <input ng-model="user.email"
+                   type="text"
+                   class="form-control"
+                   id="register-email"
+                   placeholder="email@address.com"/>
+        </div>
+        <div class="form-group">
+            <label for="register-username">Username</label>
+            <input ng-model="user.username"
+                   type="text"
+                   class="form-control"
+                   id="register-username"
+                   placeholder="username"/>
+        </div>
+        <div class="form-group">
+            <label for="register-pass">Password</label>
+            <input ng-model="user.password"
+                   type="password"
+                   class="form-control"
+                   id="register-pass"
+                   placeholder="password"/>
+        </div>
+        <div class="form-group">
+            <label for="register-confirm-pass">Confirm Password</label>
+            <input ng-model="user.confirmPass"
+                   type="password"
+                   class="form-control"
+                   id="register-confirm-pass"
+                   placeholder="very password"/>
+        </div>
+    </form>
+
+    <a ng-click="model.register(user)"
+       class="btn btn-primary btn-block">
+        Register
+    </a>
+
+    <a class="btn btn-success btn-block" href="#/login">
+        Cancel
+    </a>
+</div>

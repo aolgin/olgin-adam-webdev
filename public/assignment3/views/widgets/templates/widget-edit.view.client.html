@@ -1,0 +1,72 @@
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-text pull-left">
+            <a href="#/user/{{model.userId}}/website/{{model.websiteId}}/page/{{model.pageId}}/widget" class="navbar-link">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+        </div>
+        <div class="navbar-text pull-right">
+            <a href="#/user/{{model.userId}}/website/{{model.websiteId}}/page/{{model.pageId}}/widget/new" class="navbar-link">
+              <span class="glyphicon glyphicon-plus">
+              </span>
+            </a>
+        </div>
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                Edit Widget
+            </a>
+        </div>
+    </div>
+</nav>
+
+<div class="container-fluid">
+    <!--
+    Preferred method
+    <ng-include src="model.getEditorTemplateUrl(model.widget.widgetType)"></ng-include>
+    -->
+
+    <!-- Method required by the rubric -->
+    <div ng-switch="model.widget.widgetType">
+        <div ng-switch-when="HEADING">
+            <ng-include src="'views/widgets/templates/editors/widget-HEADING-editor.view.client.html'"></ng-include>
+        </div>
+        <div ng-switch-when="IMAGE">
+            <ng-include src="'views/widgets/templates/editors/widget-IMAGE-editor.view.client.html'"></ng-include>
+        </div>
+        <div ng-switch-when="HTML">
+            <ng-include src="'views/widgets/templates/editors/widget-HTML-editor.view.client.html'"></ng-include>
+        </div>
+        <div ng-switch-when="YOUTUBE">
+            <ng-include src="'views/widgets/templates/editors/widget-YOUTUBE-editor.view.client.html'"></ng-include>
+        </div>
+    </div>
+
+    <a class="btn btn-success btn-block"
+       ng-click="model.updateWidget(model.widget)">
+        Update
+    </a>
+    <a class="btn btn-danger btn-block"
+       ng-click="model.deleteWidget(model.widget._id)">
+        Delete
+    </a>
+</div>
+
+<nav class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container-fluid">
+        <div class="navbar-text pull-left">
+            <a href="#">
+                <span class="glyphicon glyphicon-play"></span>
+            </a>
+        </div>
+        <div class="navbar-text pull-left">
+            <a href="#">
+                <span class="glyphicon glyphicon-eye-open"></span>
+            </a>
+        </div>
+        <div class="navbar-text pull-right">
+            <a href="#/profile/{{model.userId}}">
+                <span class="glyphicon glyphicon-user"></span>
+            </a>
+        </div>
+    </div>
+</nav>

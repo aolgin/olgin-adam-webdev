@@ -10,15 +10,24 @@
         vm.pageId = $routeParams['pid'];
 
         function init() {
-            vm.pages = PageService.findPagesByWebsiteId(vm.websiteId);
+            var promise = PageService.findPagesByWebsiteId(vm.websiteId);
+            promise.success(function(pages) {
+                vm.pages = pages;
+            });
         }
         init();
 
         vm.createPage = createPage;
 
         function createPage(newPage) {
-            PageService.createPage(newPage, vm.websiteId);
-            $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page");
+            var promise = PageService.createPage(newPage, vm.websiteId);
+            promise.success(function(status) {
+               if (status == 'OK') {
+                   $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page");
+               } else {
+                   vm.error = "An error occurred trying to create a page";
+               }
+            });
         }
 
     }
