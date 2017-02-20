@@ -29,7 +29,7 @@ module.exports = function(app) {
 
     // Service Functions
 
-    function findPagesByWebsite(res, req) {
+    function findPagesByWebsite(req, res) {
         var wid = req.params['wid'];
         var pps = pages.filter(function(p) {
             return p.websiteId == wid;
@@ -37,7 +37,7 @@ module.exports = function(app) {
         res.json(pps);
     }
 
-    function createPage(res, req) {
+    function createPage(req, res) {
         var pageExists = findPageByName(req.query['name']);
         if (!pageExists) {
             var pid = String(new Date().getTime());
@@ -58,15 +58,19 @@ module.exports = function(app) {
         }
     }
 
-    function findPageById(res, req) {
+    function findPageById(req, res) {
         var pid = req.params['pid'];
         var page = pages.find(function(p) {
             return p._id == pid;
         });
-        res.json(page);
+        if (page) {
+            res.json(page);
+        } else {
+            res.sendStatus(404);
+        }
     }
 
-    function updatePage(res, req) {
+    function updatePage(req, res) {
         var name = req.query['name'];
         var description = req.query['description'];
         var modified = new Date();
@@ -79,7 +83,7 @@ module.exports = function(app) {
         res.sendStatus(200);
     }
 
-    function deletePage(res, req) {
+    function deletePage(req, res) {
         var index = findIndexById(req.params['pid']);
         pages.splice(index, 1);
         res.sendStatus(200);

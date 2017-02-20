@@ -32,8 +32,7 @@ module.exports = function(app) {
 
     // Service Functions
 
-    function findWebsitesByUser(res, req) {
-        console.log(req.params);
+    function findWebsitesByUser(req, res) {
         var devId = req.params['uid'];
         var sites = websites.filter(function(w) {
             return w.developerId == devId;
@@ -41,7 +40,7 @@ module.exports = function(app) {
         res.json(sites);
     }
 
-    function createWebsite(res, req) {
+    function createWebsite(req, res) {
         var siteExists = findSiteByName(req.query['name']);
         if (!siteExists) {
             var wid = String(new Date().getTime());
@@ -62,15 +61,19 @@ module.exports = function(app) {
         }
     }
 
-    function findWebsiteById(res, req) {
+    function findWebsiteById(req, res) {
         var wid = req.params['wid'];
         var site = websites.find(function(w) {
            return w._id == wid;
         });
-        res.json(site);
+        if (site) {
+            res.json(site);
+        } else {
+            res.sendStatus(404);
+        }
     }
 
-    function updateWebsite(res, req) {
+    function updateWebsite(req, res) {
         var name = req.query['name'];
         var description = req.query['description'];
         var modified = new Date();
@@ -83,7 +86,7 @@ module.exports = function(app) {
         res.sendStatus(200);
     }
 
-    function deleteWebsite(res, req) {
+    function deleteWebsite(req, res) {
         var index = findIndexById(req.params['wid']);
         websites.splice(index, 1);
         res.sendStatus(200);

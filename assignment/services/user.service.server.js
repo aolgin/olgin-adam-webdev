@@ -37,7 +37,11 @@ module.exports = function(app) {
         var user = users.find(function (u) {
             return u.username == username && u.password == password;
         });
-        res.json(user);
+        if(user) {
+            res.json(user);
+        } else {
+            res.sendStatus(404);
+        }
     }
 
     function findUserById(req, res) {
@@ -46,11 +50,16 @@ module.exports = function(app) {
         var user = users.find(function (u) {
             return u._id == userId;
         });
-        res.json(user);
+        if (user) {
+            res.json(user);
+        } else {
+            res.sendStatus(404);
+        }
     }
 
     function updateUser(req, res) {
         var userId = req.params['uid'];
+        // var newUser = req.body;
         var username = req.query['username'];
         var firstName = req.query['firstName'];
         var lastName = req.query['lastName'];

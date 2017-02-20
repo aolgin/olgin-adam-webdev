@@ -57,7 +57,7 @@ module.exports = function (app) {
 
     // Service Functions
 
-    function findWidgetsByPage(res, req) {
+    function findWidgetsByPage(req, res) {
         var wgid = req.params['wgid'];
         var wgs = widgets.filter(function(w) {
             return w.pageId == wgid;
@@ -65,7 +65,7 @@ module.exports = function (app) {
         res.json(wgs);
     }
 
-    function createWidget(res, req) {
+    function createWidget(req, res) {
         var widgetExists = findWidgetByName(req.query['name']);
         if (!widgetExists) {
             var wgid = String(new Date().getTime());
@@ -87,15 +87,19 @@ module.exports = function (app) {
         }
     }
 
-    function findWidgetById(res, req) {
+    function findWidgetById(req, res) {
         var wgid = req.params['wgid'];
         var widget = widgets.find(function(w) {
             return w._id == wgid;
         });
-        res.json(widget);
+        if (widget) {
+            res.json(widget);
+        } else {
+            res.sendStatus(404);
+        }
     }
 
-    function updateWidget(res, req) {
+    function updateWidget(req, res) {
         var name = req.query['name'];
         var text = req.query['text'];
         var type = req.query['type'];
@@ -116,7 +120,7 @@ module.exports = function (app) {
         res.sendStatus(200);
     }
 
-    function deleteWidget(res, req) {
+    function deleteWidget(req, res) {
         var index = findIndexById(req.params['wgid']);
         widgets.splice(index, 1);
         res.sendStatus(200);
