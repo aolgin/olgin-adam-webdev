@@ -23,10 +23,7 @@
         }
 
         function createWebsite(website, uid) {
-            return $http.post("/api/user/" + uid +
-                "/website" +
-                "?name=" + website.name +
-                "&description=" + website.description);
+            return $http.post("/api/user/" + uid + "/website", website);
         }
 
         function deleteWebsite(wid) {
@@ -34,9 +31,7 @@
         }
 
         function updateWebsite(wid, newSite) {
-            return $http.put("/api/website/" + wid +
-                "?name=" + newSite.name +
-                "&description=" + newSite.description);
+            return $http.put("/api/website/" + wid, newSite);
         }
     }
 })();

@@ -6,16 +6,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
     <link href="../css/custom.css" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-route.min.js"></script>
+
     <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <!--Angular by default uses jQuery-lite, but another version is found, it will user that-->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular-route.min.js"></script>
+    <script src="../js/vendor/jquery.ui.touch-punch.min.js"></script>
+    <!--<script src="../js/custom.js"></script>-->
 
     <script src="app.js"></script>
     <script src="config.js"></script>
 
+    <!-- Directives -->
+    <script src="directives/sortable.directive.client.js"></script>
+
+    <!-- Controllers -->
     <script src="views/user/controllers/login.controller.client.js"></script>
     <script src="views/user/controllers/profile.controller.client.js"></script>
+    <script src="views/user/controllers/password.controller.client.js"></script>
     <script src="views/user/controllers/register.controller.client.js"></script>
     <script src="views/website/controllers/website-list.controller.client.js"></script>
     <script src="views/website/controllers/website-new.controller.client.js"></script>
@@ -27,6 +36,7 @@
     <script src="views/widgets/controllers/widget-new.controller.client.js"></script>
     <script src="views/widgets/controllers/widget-edit.controller.client.js"></script>
 
+    <!-- Services -->
     <script src="services/website.service.client.js"></script>
     <script src="services/page.service.client.js"></script>
     <script src="services/user.service.client.js"></script>

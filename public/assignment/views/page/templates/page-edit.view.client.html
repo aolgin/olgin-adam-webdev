@@ -36,6 +36,9 @@
     </div>
 
     <div class="col-sm-8 col-xs-12">
+        <div class="alert alert-warning" ng-show="model.error">
+            {{model.error}}
+        </div>
         <form>
             <div class="form-group">
                 <label for="page-name">Name</label>

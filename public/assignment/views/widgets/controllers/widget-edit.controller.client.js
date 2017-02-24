@@ -27,14 +27,17 @@
         }
 
         function deleteWidget() {
-            var promise = WidgetService.deleteWidget(vm.widgetId);
-            promise.success(function(status) {
-               if (status == 'OK') {
-                   $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
-               } else {
-                   vm.error = "An error occurred trying to delete the widget";
-               }
-            });
+            var answer = confirm("Delete this widget?");
+            if (answer) {
+                var promise = WidgetService.deleteWidget(vm.widgetId);
+                promise.success(function (status) {
+                    if (status == 'OK') {
+                        $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
+                    }
+                }).error(function (err) {
+                    vm.error = "An error occurred trying to delete the widget: \n" + err;
+                });
+            }
         }
 
         function updateWidget(newWidget) {
@@ -42,11 +45,14 @@
             promise.success(function(status) {
                 if (status == 'OK') {
                     $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget");
+                }
+            }).error(function (err) {
+                if (err == 'Conflict') {
+                    vm.error = "A widgets exists with that name already! Please use a different name";
                 } else {
-                    vm.error = "An error occurred trying to delete the widget";
+                    vm.error = "An error occurred trying to update the widget: \n" + err;
                 }
             });
         }
-
     }
 })();

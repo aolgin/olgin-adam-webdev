@@ -24,9 +24,7 @@
         }
 
         function createPage(page, wid) {
-            return $http.post("/api/website/" + wid +
-                "?name=" + page.name +
-                "&description=" + page.title);
+            return $http.post("/api/website/" + wid + "/page", page);
         }
 
         function deletePage(pid) {
@@ -34,9 +32,7 @@
         }
 
         function updatePage(pid, newPage) {
-            return $http.put("/api/page/" + pid +
-                "?name=" + newPage.name +
-                "&description=" + newPage.description);
+            return $http.put("/api/page/" + pid, newPage);
         }
     }
 })();

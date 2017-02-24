@@ -16,14 +16,15 @@ module.exports = function(app) {
 
     function findIndexById(uid) {
         var index = users.findIndex(function(u) {
-            return u._id == uid;
+            return u._id === uid;
         });
         return index;
     }
 
     function findUserByUsername(uname) {
         var user = users.find(function (u) {
-            return u.username == uname;
+            // usernames are case-sensitive
+            return u.username === uname;
         });
         return user;
     }
@@ -35,7 +36,8 @@ module.exports = function(app) {
         var password = req.query['password'];
 
         var user = users.find(function (u) {
-            return u.username == username && u.password == password;
+            return u.username === username &&
+                u.password === password;
         });
         if(user) {
             res.json(user);
@@ -48,54 +50,74 @@ module.exports = function(app) {
         var userId = req.params['uid'];
 
         var user = users.find(function (u) {
-            return u._id == userId;
+            return u._id === userId;
         });
         if (user) {
             res.json(user);
         } else {
-            res.sendStatus(404);
+            res.sendStatus(503);
         }
     }
 
     function updateUser(req, res) {
         var userId = req.params['uid'];
-        // var newUser = req.body;
-        var username = req.query['username'];
-        var firstName = req.query['firstName'];
-        var lastName = req.query['lastName'];
-        var email = req.query['email'];
+
+        console.log(req.body);
+        var pass = req.body.newPassword;
 
         var index = findIndexById(userId);
-        users[index].firstName = firstName;
-        users[index].lastName = lastName;
-        users[index].email = email;
-        users[index].username = username;
-        users[index].modified = new Date();
+        // If updating general user information
+        if (!pass) {
+            var user = req.body;
+            if (user.username != users[index].username &&
+                findUserByUsername(user.username)) {
+                res.sendStatus(409);
+                return;
+            }
 
-        res.sendStatus(200);
+            users[index].firstName = user.firstName;
+            users[index].lastName = user.lastName;
+            users[index].email = user.email;
+            users[index].username = user.username;
+            users[index].modified = new Date();
+            res.sendStatus(200);
+        } else {
+            var passList = req.body;
+            // If updating password
+            if (users[index].password === passList.currentPassword) {
+                if (passList.newPassword === passList.confirmPassword) {
+                    users[index].password = passList.newPassword;
+                    res.sendStatus(200);
+                } else {
+                    res.sendStatus(409);
+                }
+            } else {
+                res.sendStatus(401);
+            }
+        }
     }
 
     function createUser(req, res) {
-        var username = req.query['username'];
+        var user = req.body;
+        var username = user.username;
         var userExists = findUserByUsername(username);
         if (!userExists) {
             var userId = String(new Date().getTime());
             var created = new Date();
             var newUser = {
                 "_id": userId,
-                "username": req.query['username'],
-                "password": req.query['password'],
-                "email": req.query['email'],
-                "firstName": req.query['firstName'],
-                "lastName": req.query['lastName'],
+                "username": user.username,
+                "password": user.password,
+                "email": user.email,
+                "firstName": user.firstName,
+                "lastName": user.lastName,
                 "created": created,
                 "modified": created
             };
             users.push(newUser);
-            res.send(userId);
+            res.json(newUser);
         } else {
-            //TODO verify whether this is what should be sent if user exists
-            res.sendStatus(409)
+            res.sendStatus(409);
         }
     }
 

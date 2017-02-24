@@ -5,10 +5,10 @@
 
     function profileController($routeParams, $location, UserService) {
         var vm = this;
-        var userId = $routeParams['uid'];
+        vm.userId = $routeParams['uid'];
 
         function init() {
-            var promise = UserService.findUserById(userId);
+            var promise = UserService.findUserById(vm.userId);
             promise.success(function (user) {
                 vm.user = user;
             });
@@ -19,25 +19,32 @@
         vm.unregister = unregister;
 
         function update (newUser) {
-            var promise = UserService.updateUser(userId, newUser);
+            var promise = UserService.updateUser(vm.userId, newUser);
             promise.success(function (status) {
                 if (status === 'OK') {
                     vm.message = "Successfully updated user information!";
+                }
+            }).error(function(err) {
+                if (err == 'Conflict') {
+                    vm.error = "A user with that username already exists!";
                 } else {
-                    vm.error = "Unable to update user";
+                    vm.error = "An uncaught error occurred updating your user information: \n" + err;
                 }
             });
         }
 
         function unregister() {
-            var promise = UserService.deleteUserById(userId);
-            promise.success(function (status) {
-               if (status === 'OK') {
-                   $location.url('/login');
-               } else {
-                   vm.error = "Something went wrong unregistering the user...";
-               }
-            });
+            var answer = confirm("Are you sure?");
+            if (answer) {
+                var promise = UserService.deleteUserById(vm.userId);
+                promise.success(function (status) {
+                    if (status === 'OK') {
+                        $location.url('/login');
+                    }
+                }).error(function (err) {
+                    vm.error = "An uncaught error occurred deleting your user: \n" + err;
+                });
+            }
         }
     }
 })();

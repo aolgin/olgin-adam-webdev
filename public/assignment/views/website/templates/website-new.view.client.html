@@ -51,6 +51,9 @@
     </div>
 
     <div class="col-sm-8">
+        <div class="alert alert-warning" ng-show="model.error">
+            {{model.error}}
+        </div>
         <form>
             <div class="form-group">
                 <label for="website-name">Website Name</label>

@@ -46,3 +46,9 @@ body {
     background-color: #FFA500;
     border-color: #FF8C00;
 }
+
+.btn-teal {
+    color: #fff;
+    background-color: #008B8B;
+    border-color: #008080;
+}

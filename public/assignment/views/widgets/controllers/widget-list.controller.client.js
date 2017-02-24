@@ -35,6 +35,18 @@
         }
 
         /*
+        function updateWidgetOrdering() {
+            var promise = WidgetService.updateWidgetOrdering(vm.pageId, newOrder);
+            promise.success(function(status) {
+                if (status == 'OK') {
+                    vm.updated = "Changes saved!"
+                }
+            }).error(function (err) {
+                vm.error = "An uncaught error occurred trying to update the widget order: \n" + err;
+            });
+        }*/
+
+        /*
          Youtube videos won't load properly unless they have an "embed"
          stuck in the middle of it. This function adds in that "embed".
          Nothing happens if it already contains an embed

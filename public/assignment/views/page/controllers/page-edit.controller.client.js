@@ -25,14 +25,17 @@
         vm.updatePage = updatePage;
 
         function deletePage() {
-            var promise = PageService.deletePage(vm.pageId);
-            promise.success(function(status) {
-                if (status == 'OK') {
-                    $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page");
-                } else {
-                    vm.error = "An error occurred deleting the page";
-                }
-            });
+            var answer = confirm("Delete this page?");
+            if (answer) {
+                var promise = PageService.deletePage(vm.pageId);
+                promise.success(function (status) {
+                    if (status == 'OK') {
+                        $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page");
+                    }
+                }).error(function (err) {
+                    vm.error = "An error uncaught occurred deleting the page: " + err;
+                });
+            }
         }
 
         function updatePage(newPage) {
@@ -40,8 +43,12 @@
             promise.success(function(status) {
                 if (status == 'OK') {
                     $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page");
+                }
+            }).error(function (err) {
+                if (err == 'Conflict') {
+                    vm.error = "A page with that name already exists! Please use a different name";
                 } else {
-                    vm.error = "An error occurred deleting the page";
+                    vm.error = "An uncaught error occurred updating the page: \n" + err;
                 }
             });
         }

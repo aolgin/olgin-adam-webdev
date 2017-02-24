@@ -12,7 +12,8 @@
             "createUser": createUser,
             "findUserByUsername": findUserByUsername,
             "deleteUserById": deleteUserById,
-            "doPasswordsMatch": doPasswordsMatch
+            "doPasswordsMatch": doPasswordsMatch,
+            "updatePassword": updatePassword
         };
         return api;
 
@@ -37,12 +38,7 @@
         }
 
         function createUser(newUser) {
-            return $http.post("/api/user" +
-                "?username=" + newUser.username +
-                "&password=" + newUser.password +
-                "&email=" + newUser.email +
-                "&firstName=" + newUser.firstName +
-                "&lastName=" + newUser.lastName);
+            return $http.post("/api/user", newUser);
         }
 
         function findUserByCredentials(username, pass) {
@@ -54,10 +50,11 @@
         }
 
         function updateUser(uid, newUser) {
-            return $http.put("/api/user/" + uid +
-                "?firstName=" + newUser.firstName +
-                "&lastName=" + newUser.lastName +
-                "&email=" + newUser.email);
+            return $http.put("/api/user/" + uid, newUser);
+        }
+
+        function updatePassword(uid, passwords) {
+            return $http.put("/api/user/" + uid, passwords);
         }
     }
 })();

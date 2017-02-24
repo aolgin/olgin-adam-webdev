@@ -20,12 +20,17 @@
 </nav>
 
 <div class="container-fluid">
+
+    <div ng-show="model.error" class="alert alert-warning">
+        {{model.error}}
+    </div>
+
     <!--
-    Preferred method
+    TODO: Running into issues with widgetType not coming through as defined using this method
     <ng-include src="model.getEditorTemplateUrl(model.widget.widgetType)"></ng-include>
     -->
 
-    <!-- Method required by the rubric -->
+    <!-- Alternative Method -->
     <div ng-switch="model.widget.widgetType">
         <div ng-switch-when="HEADING">
             <ng-include src="'views/widgets/templates/editors/widget-HEADING-editor.view.client.html'"></ng-include>

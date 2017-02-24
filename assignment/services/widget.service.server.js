@@ -4,93 +4,102 @@ module.exports = function (app) {
     app.get("/api/widget/:wgid", findWidgetById);
     app.delete("/api/widget/:wgid", deleteWidget);
     app.put("/api/widget/:wgid", updateWidget);
+    app.post("/api/upload", uploadImage);
+    // app.put("/api/page/:pid/widget", updateWidgetOrdering);
 
     var widgets = [
-        { "_id": "123", "name": "Gizmodo Heading", "widgetType": "HEADING", "pageId": "321", "size": 2, "text": "GIZMODO"},
-        { "_id": "234", "name": "Lorem Heading1", "widgetType": "HEADING", "pageId": "321", "size": 4, "text": "Lorem ipsum"},
+        { "_id": "123", "name": "Gizmodo Heading", "widgetType": "HEADING", "pageId": "321", "size": 2, "text": "GIZMODO", "orderIndex": 0},
+        { "_id": "234", "name": "Lorem Heading1", "widgetType": "HEADING", "pageId": "321", "size": 4, "text": "Lorem ipsum", "orderIndex": 1},
         { "_id": "345", "name": "Random Image", "text": "lorem", "widgetType": "IMAGE", "pageId": "321", "width": "100%",
-            "url": "http://lorempixel.com/400/200/"},
-        { "_id": "456", "name": "RawHTML1", "widgetType": "HTML", "pageId": "321", "text": "<p>Lorem ipsum</p>"},
-        { "_id": "567", "name": "Lorem Heading2", "widgetType": "HEADING", "pageId": "321", "size": 4, "text": "Lorem ipsum"},
+            "url": "http://lorempixel.com/400/200/", "orderIndex": 2},
+        { "_id": "456", "name": "RawHTML1", "widgetType": "HTML", "pageId": "321", "text": "<p>Lorem ipsum</p>", "orderIndex": 3},
+        { "_id": "567", "name": "Lorem Heading2", "widgetType": "HEADING", "pageId": "321", "size": 4, "text": "Lorem ipsum", "orderIndex": 4},
         { "_id": "678", "name": "Youtube Widget1", "text": "lorem", "widgetType": "YOUTUBE", "pageId": "321", "width": "100%",
-            "url": "https://www.youtube.com/AM2Ivdi9c4E" },
-        { "_id": "789", "name": "RawHTML2", "widgetType": "HTML", "pageId": "321", "text": "<p>Lorem ipsum</p>"}
+            "url": "https://www.youtube.com/AM2Ivdi9c4E", "orderIndex": 5 },
+        { "_id": "789", "name": "RawHTML2", "widgetType": "HTML", "pageId": "321", "text": "<p>Lorem ipsum</p>", "orderIndex": 6}
     ];
 
     // Helper Functions
 
     function findIndexById(wgid) {
         var index = widgets.findIndex(function(w) {
-            return w._id == wgid;
+            return w._id === wgid;
         });
         return index;
     }
 
     function findWidgetByName(name) {
         var widget = widgets.find(function(w) {
-            return w.name == name;
+            // Widget names are not case sensitive
+            return w.name.toUpperCase() === name.toUpperCase();
         });
         return widget;
     }
 
+    function numWidgetsByPage(pid) {
+        var widgetList = widgets.filter(function(w) {
+            return w.pageId === pid;
+        });
+        return widgetList.length;
+    }
+
     // Additional Widget Functionality
 
-    /* var multer = require('multer'); // npm install multer --save
-     var upload = multer({ dest: __dirname+'/../../public/uploads' });
+    var multer = require('multer'); // npm install multer --save
+    var upload = multer({ dest: __dirname+'/../../public/uploads' });
 
-     app.post ("/api/upload", upload.single('myFile'), uploadImage);
 
-     function uploadImage(req, res) {
+    function uploadImage(req, res) {
+        var widgetId      = req.body.widgetId;
+        var width         = req.body.width;
+        var myFile        = req.file;
 
-     var widgetId      = req.body.widgetId;
-     var width         = req.body.width;
-     var myFile        = req.file;
+        var originalname  = myFile.originalname; // file name on user's computer
+        var filename      = myFile.filename;     // new file name in upload folder
+        var path          = myFile.path;         // full path of uploaded file
+        var destination   = myFile.destination;  // folder where file is saved to
+        var size          = myFile.size; //TODO what format does this come in as?
+        var mimetype      = myFile.mimetype;
 
-     var originalname  = myFile.originalname; // file name on user's computer
-     var filename      = myFile.filename;     // new file name in upload folder
-     var path          = myFile.path;         // full path of uploaded file
-     var destination   = myFile.destination;  // folder where file is saved to
-     var size          = myFile.size;
-     var mimetype      = myFile.mimetype;
-     }*/
-
+        res.sendStatus(200);
+    }
 
     // Service Functions
 
+/*    function updateWidgetOrdering(req, res) {
+        var pid = req.params['pid'];
+        var newOrder = req.body;
+    }*/
+
     function findWidgetsByPage(req, res) {
-        var wgid = req.params['wgid'];
+        var pid = req.params['pid'];
         var wgs = widgets.filter(function(w) {
-            return w.pageId == wgid;
+            return w.pageId === pid;
         });
         res.json(wgs);
     }
 
     function createWidget(req, res) {
-        var widgetExists = findWidgetByName(req.query['name']);
-        if (!widgetExists) {
-            var wgid = String(new Date().getTime());
-            var created = new Date();
-            var newWidget = {
-                "_id": wgid,
-                "pageId": req.params['pid'],
-                "name": req.query['name'],
-                "text": req.query['text'],
-                "widgetType": req.query['type'],
-                "created": created,
-                "modified": created
-            };
-            widgets.push(newWidget);
-            res.sendStatus(200);
-        } else {
-            //TODO verify whether this is what should be sent if user exists
-            res.sendStatus(409)
-        }
+        var pid = req.params['pid'];
+        var wgid = String(new Date().getTime());
+        var created = new Date();
+        var orderIndex = numWidgetsByPage(pid); // Set as the last widget on the page by default
+        var newWidget = {
+            "_id": wgid,
+            "pageId": pid,
+            "widgetType": req.query['widgetType'],
+            "created": created,
+            "modified": created,
+            "orderIndex": orderIndex
+        };
+        widgets.push(newWidget);
+        res.send(wgid);
     }
 
     function findWidgetById(req, res) {
         var wgid = req.params['wgid'];
         var widget = widgets.find(function(w) {
-            return w._id == wgid;
+            return w._id === wgid;
         });
         if (widget) {
             res.json(widget);
@@ -100,21 +109,25 @@ module.exports = function (app) {
     }
 
     function updateWidget(req, res) {
-        var name = req.query['name'];
-        var text = req.query['text'];
-        var type = req.query['type'];
+        var widget = req.body;
+        var type = widget.widgetType;
         var modified = new Date();
 
         var index = findIndexById(req.params['wgid']);
-        widgets[index].name = name;
-        widgets[index].text = text;
+        if (widget.name != widgets[index].name &&
+            findWidgetByName(widget.name)) {
+            res.sendStatus(409);
+            return;
+        }
+        widgets[index].name = widget.name;
+        widgets[index].text = widget.text;
         widgets[index].modified = modified;
 
         if (type === 'YOUTUBE' || type === 'IMAGE') {
-            widgets[index].url = req.query['url'];
-            widgets[index].width = req.query['width'];
+            widgets[index].url = widget.url;
+            widgets[index].width = widget.width;
         } else if (type === 'HEADING') {
-            widgets[index].size = req.query['size'];
+            widgets[index].size = widget.size;
         }
 
         res.sendStatus(200);

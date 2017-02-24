@@ -11,6 +11,7 @@
             "findWidgetById": findWidgetById,
             "updateWidget": updateWidget,
             "deleteWidget": deleteWidget
+            // "updateWidgetOrdering": updateWidgetOrdering
         };
         return api;
 
@@ -28,20 +29,15 @@
         }
 
         function updateWidget(widgetId, newWidget) {
-            var url = "/api/widget/" + widgetId +
-                "?name=" + newWidget.name +
-                "&text=" + newWidget.text;
-            if (type === 'YOUTUBE' || type === 'IMAGE') {
-                url += "&url=" + newWidget.url +
-                        "&width=" + newWidget.width;
-            } else if (type === 'HEADING') {
-                url += "&size=" + newWidget.size;
-            }
-            return $http.put(url);
+            return $http.put("/api/widget/" + widgetId, newWidget);
         }
 
         function deleteWidget(widgetId) {
             return $http.delete("/api/widget/" + widgetId);
         }
+
+        /*function updateWidgetOrdering(pid, widgetOrder) {
+            return $http.put("/api/page/" + pid + "/widget", widgetOrder);
+        }*/
     }
 })();

@@ -3,7 +3,10 @@
         .module("WebAppMaker")
         .config(configuration);
 
-    function configuration($routeProvider) {
+    function configuration($routeProvider, $locationProvider, $httpProvider) {
+        $httpProvider.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8';
+        $httpProvider.defaults.headers.put['Content-Type'] = 'application/json;charset=utf-8';
+
         $routeProvider
             .when("/login",{
                 templateUrl: 'views/user/templates/login.view.client.html',
@@ -18,6 +21,11 @@
             .when("/profile/:uid",{
                 templateUrl: 'views/user/templates/profile.view.client.html',
                 controller: 'profileController',
+                controllerAs: 'model'
+            })
+            .when("/profile/:uid/changePassword",{
+                templateUrl: 'views/user/templates/password.view.client.html',
+                controller: 'passwordController',
                 controllerAs: 'model'
             })
             .when("/user/:uid/website",{
@@ -65,5 +73,7 @@
                 controller: 'WidgetEditController',
                 controllerAs: 'model'
             })
+
+        // $locationProvider.html5Mode(true);
     }
 })();

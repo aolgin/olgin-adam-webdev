@@ -21,13 +21,12 @@
 
         function createWidget(type) {
             var promise = WidgetService.createWidget(vm.pageId, type);
-            //TODO return to this
             promise.success(function(wgid) {
-               if (wgid) {
-                   $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget/" + wgid);
-               } else {
-                   vm.error = "An error occurred creating new widget";
-               }
+                if (wgid) {
+                    $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget/" + wgid);
+                }
+            }).error(function(err) {
+                vm.error = "An error occurred creating new widget: \n" + err;
             });
         }
     }
