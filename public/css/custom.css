@@ -52,3 +52,16 @@ body {
     background-color: #008B8B;
     border-color: #008080;
 }
+
+.ado-youtube-widget {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+}
+.ado-youtube-widget iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
