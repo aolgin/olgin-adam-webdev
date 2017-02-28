@@ -11,8 +11,8 @@
 
         function init() {
             var promise = PageService.findPagesByWebsiteId(vm.websiteId);
-            promise.success(function(pages) {
-                vm.pages = pages;
+            promise.then(function(response) {
+                vm.pages = response.data;
             });
         }
         init();

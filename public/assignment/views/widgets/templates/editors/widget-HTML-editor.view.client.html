@@ -15,4 +15,10 @@
                   id="html-text"
                   placeholder="Raw HTML goes here..."></textarea>
     </div>
+
+    <div class="form-group">
+        <label for="html-preview">Preview</label>
+        <div id="html-preview"
+             ng-bind-html="model.getTrustedHtml(model.widget.text)"></div>
+    </div>
 </form>

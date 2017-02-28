@@ -9,10 +9,12 @@
         vm.websiteId = $routeParams['wid'];
         vm.pageId = $routeParams['pid'];
 
+        vm.widgetOrder = [];
+
         function init() {
             var promise = WidgetService.findWidgetsByPageId(vm.pageId);
-            promise.success(function(w) {
-                vm.widgets = w;
+            promise.then(function(response) {
+                vm.widgets = response.data;
             });
         }
         init();
@@ -21,6 +23,7 @@
         vm.trustUrl = trustUrl;
         vm.getTrustedHtml = getTrustedHtml;
         vm.getWidgetTemplateUrl = getWidgetTemplateUrl;
+        vm.updateWidgetOrdering = updateWidgetOrdering;
 
         function getWidgetTemplateUrl(type) {
             return 'views/widgets/templates/widget-' + type + '.view.client.html';
@@ -34,17 +37,19 @@
             return $sce.trustAsResourceUrl(url);
         }
 
-        /*
         function updateWidgetOrdering() {
-            var promise = WidgetService.updateWidgetOrdering(vm.pageId, newOrder);
-            promise.success(function(status) {
-                if (status == 'OK') {
+            var widgets = $('div.ado-widget');
+
+            console.log(widgets);
+            /*var promise = WidgetService.updateWidgetOrdering(vm.pageId, newOrder);
+            promise.then(function(response) {
+                if (response.status == 200) {
                     vm.updated = "Changes saved!"
                 }
-            }).error(function (err) {
-                vm.error = "An uncaught error occurred trying to update the widget order: \n" + err;
-            });
-        }*/
+            }).catch(function (err) {
+                vm.error = "An uncaught error occurred trying to update the widget order: \n" + err.data;
+            });*/
+        }
 
         /*
          Youtube videos won't load properly unless they have an "embed"

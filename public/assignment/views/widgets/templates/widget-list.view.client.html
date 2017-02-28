@@ -14,63 +14,65 @@
             </a>
         </div>
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand">
                 Widgets
             </a>
         </div>
     </div>
 </nav>
 
-<div class="container-fluid ado-widget-list" ado-sortable="" >
+<div class="container-fluid">
     <!--
-    May end up implementing this later. The intent is to save the order of the widgets
-    as a whole, rather than piecemeal as it changes. Not fully implemented or working yet.
-
-    <div ng-show="model.message" class="alert alert-info">
+        May end up implementing this later. The intent is to save the order of the widgets
+        as a whole, rather than piecemeal as it changes. Not fully implemented or working yet.
+        -->
+    <!--<div class="alert alert-info"> &lt;!&ndash; ng-show="model.message" &ndash;&gt;
         <p>Looks like you've switched up the widget order. Would you like to save your new configuration?</p>
         <a class="btn btn-primary btn-block"
            ng-click="model.updateWidgetOrdering()">
+            Save Ordering
         </a>
-    </div>
+    </div>-->
     <div ng-show="model.updated" class="alert alert-success">
         <p>{{model.updated}}</p>
     </div>
     <div ng-show="model.error" class="alert alert-danger">
         <p>{{model.error}}</p>
     </div>
-    -->
 
-    <div ng-repeat="widget in model.widgets">
-        <div class="ado-widget">
-            <div class="ado-widget-icons pull-right">
-                <a href="#/user/{{model.userId}}/website/{{model.websiteId}}/page/{{model.pageId}}/widget/{{widget._id}}">
-                  <span class="glyphicon glyphicon-cog">
-                  </span>
-                </a>
-                <a>
-                  <span class="glyphicon glyphicon-align-justify">
-                  </span>
-                </a>
+    <div ado-sortable="">
+        <div class="ado-widget-list" ng-repeat="widget in model.widgets">
+            <div class="ado-widget">
+                <div class="ado-widget-icons pull-right">
+                    <a href="#/user/{{model.userId}}/website/{{model.websiteId}}/page/{{model.pageId}}/widget/{{widget._id}}">
+                      <span class="glyphicon glyphicon-cog">
+                      </span>
+                    </a>
+                    <a>
+                      <span class="glyphicon glyphicon-align-justify">
+                      </span>
+                    </a>
+                </div>
+
+                <!--Preferred Method-->
+                <ng-include src="model.getWidgetTemplateUrl(widget.widgetType)"></ng-include>
+
+                <!-- Alternative Method -->
+                <!--<div ng-switch="widget.widgetType">
+                    <div ng-switch-when="HEADING">
+                        <ng-include src="'views/widgets/templates/widget-HEADING.view.client.html'"></ng-include>
+                    </div>
+                    <div ng-switch-when="IMAGE">
+                        <ng-include src="'views/widgets/templates/widget-IMAGE.view.client.html'"></ng-include>
+                    </div>
+                    <div ng-switch-when="HTML">
+                        <ng-include src="'views/widgets/templates/widget-HTML.view.client.html'"></ng-include>
+                    </div>
+                    <div ng-switch-when="YOUTUBE">
+                        <ng-include src="'views/widgets/templates/widget-YOUTUBE.view.client.html'"></ng-include>
+                    </div>
+                </div>-->
             </div>
-
-            <!--Preferred Method-->
-            <ng-include src="model.getWidgetTemplateUrl(widget.widgetType)"></ng-include>
-
-            <!-- Alternative Method -->
-            <!--<div ng-switch="widget.widgetType">
-                <div ng-switch-when="HEADING">
-                    <ng-include src="'views/widgets/templates/widget-HEADING.view.client.html'"></ng-include>
-                </div>
-                <div ng-switch-when="IMAGE">
-                    <ng-include src="'views/widgets/templates/widget-IMAGE.view.client.html'"></ng-include>
-                </div>
-                <div ng-switch-when="HTML">
-                    <ng-include src="'views/widgets/templates/widget-HTML.view.client.html'"></ng-include>
-                </div>
-                <div ng-switch-when="YOUTUBE">
-                    <ng-include src="'views/widgets/templates/widget-YOUTUBE.view.client.html'"></ng-include>
-                </div>
-            </div>-->
         </div>
     </div>
 </div>

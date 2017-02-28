@@ -9,8 +9,8 @@
 
         function init() {
             var promise = WebsiteService.findWebsitesByUser(vm.userId);
-            promise.success(function(sites) {
-               vm.websites = sites;
+            promise.then(function(response) {
+               vm.websites = response.data;
             });
         }
         init();

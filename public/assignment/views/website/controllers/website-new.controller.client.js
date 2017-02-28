@@ -10,8 +10,8 @@
 
         function init() {
             var promise = WebsiteService.findWebsitesByUser(vm.userId);
-            promise.success(function(sites) {
-                vm.websites = sites;
+            promise.then(function(response) {
+                vm.websites = response.data;
             });
         }
         init();
@@ -20,15 +20,16 @@
 
         function createWebsite(website) {
             var promise = WebsiteService.createWebsite(website, vm.userId);
-            promise.success(function(status) {
-                if (status == 'OK') {
+            promise.then(function(response) {
+                if (response.status == 200) {
                     $location.url("/user/" + vm.userId + "/website");
                 }
-            }).error(function (err) {
-                if (err == 'Conflict') {
+            }).catch(function (err) {
+                var status = err.status;
+                if (status == 'Conflict') {
                     vm.error = "A website with this name already exists! Please use a different name!";
                 } else {
-                    vm.error = "An uncaught error occurred creating your website: \n" + err;
+                    vm.error = "An uncaught error occurred creating your website: \n" + err.data;
                 }
             });
         }

@@ -13,19 +13,20 @@
 
         function updatePassword(passList) {
             var promise = UserService.updatePassword(vm.userId, passList);
-            promise.success(function (status) {
-                if (status == 'OK') {
+            promise.then(function (response) {
+                if (response.status == 200) {
                     vm.error = null;
                     vm.message = "Successfully updated password!";
                 }
-            }).error(function (err) {
+            }).catch(function (err) {
+                var status = err.status;
                 vm.message = null;
-                if (err == 'Conflict') {
+                if (status == 409) {
                     vm.error = 'New passwords do not match!';
-                } else if (err == 'Unauthorized') {
+                } else if (status == 401) {
                     vm.error = 'Your current password does not match the one on file';
                 } else {
-                    vm.error = 'An uncaught error occurred when updating your password: \n' + err;
+                    vm.error = 'An uncaught error occurred when updating your password: \n' + err.data;
                 }
             });
         }

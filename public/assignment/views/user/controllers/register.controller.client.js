@@ -1,11 +1,3 @@
-/*
-Generally speaking, always start off any angular JS using a self-contained namespace, as such:
-
- (function() {
-
- })();
-
- */
 (function() {
     angular
         .module("WebAppMaker")
@@ -23,13 +15,15 @@ Generally speaking, always start off any angular JS using a self-contained names
             }
 
             var promise = UserService.createUser(newUser);
-            promise.success(function (user) {
+            promise.then(function (response) {
+                var user = response.data;
                 if (user) { $location.url('/profile/' + user._id); }
-            }).error(function (err) {
-                if (err == 'Conflict') {
+            }).catch(function (err) {
+                var status = err.status;
+                if (status == 409) {
                     vm.error = "User with that username already exists: " + newUser.username;
                 } else {
-                    vm.error = "An uncaught error occurred registering your user: \n" + err;
+                    vm.error = "An uncaught error occurred registering your user: \n" + err.data;
                 }
             });
         }

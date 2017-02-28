@@ -12,16 +12,18 @@
 
         function login(user) {
             var promise = UserService.findUserByCredentials(user.username, user.password);
-            promise.success(function (user) {
+            promise.then(function (response) {
+                var user = response.data;
                 if (user) {
                     $location.url('/profile/' + user._id);
                 }
-            }).error(function (err) {
-                if (err == 'Not Found') {
+            }).catch(function (err) {
+                var status = err.status;
+                if (status == 200) {
                     vm.error = 'No user found with the following username: ' + user.username;
                 }
                 else {
-                    vm.error = 'An uncaught error occurred when logging in:\n' + err;
+                    vm.error = 'An uncaught error occurred when logging in:\n' + err.data;
                 }
             });
         }

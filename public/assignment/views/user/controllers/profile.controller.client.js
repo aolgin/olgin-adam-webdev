@@ -9,8 +9,8 @@
 
         function init() {
             var promise = UserService.findUserById(vm.userId);
-            promise.success(function (user) {
-                vm.user = user;
+            promise.then(function (response) {
+                vm.user = response.data;
             });
         }
         init();
@@ -20,15 +20,18 @@
 
         function update (newUser) {
             var promise = UserService.updateUser(vm.userId, newUser);
-            promise.success(function (status) {
-                if (status === 'OK') {
+            promise.then(function (response) {
+                if (response.status == 200) {
+                    vm.error = null;
                     vm.message = "Successfully updated user information!";
                 }
-            }).error(function(err) {
-                if (err == 'Conflict') {
+            }).catch(function(err) {
+                vm.message = null;
+                var status = err.status;
+                if (status == 200) {
                     vm.error = "A user with that username already exists!";
                 } else {
-                    vm.error = "An uncaught error occurred updating your user information: \n" + err;
+                    vm.error = "An uncaught error occurred updating your user information: \n" + err.data;
                 }
             });
         }
@@ -37,12 +40,12 @@
             var answer = confirm("Are you sure?");
             if (answer) {
                 var promise = UserService.deleteUserById(vm.userId);
-                promise.success(function (status) {
-                    if (status === 'OK') {
+                promise.then(function (response) {
+                    if (response.status == 200) {
                         $location.url('/login');
                     }
-                }).error(function (err) {
-                    vm.error = "An uncaught error occurred deleting your user: \n" + err;
+                }).catch(function (err) {
+                    vm.error = "An uncaught error occurred deleting your user: \n" + err.data;
                 });
             }
         }

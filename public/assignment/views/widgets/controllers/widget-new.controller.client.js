@@ -11,8 +11,8 @@
 
         function init() {
             var promise = WidgetService.findWidgetsByPageId(vm.pageId);
-            promise.success(function(w) {
-                vm.widgets = w;
+            promise.then(function(response) {
+                vm.widgets = response.data;
             });
         }
         init();
@@ -21,12 +21,13 @@
 
         function createWidget(type) {
             var promise = WidgetService.createWidget(vm.pageId, type);
-            promise.success(function(wgid) {
+            promise.then(function(response) {
+                var wgid = response.data;
                 if (wgid) {
                     $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page/" + vm.pageId + "/widget/" + wgid);
                 }
-            }).error(function(err) {
-                vm.error = "An error occurred creating new widget: \n" + err;
+            }).catch(function(err) {
+                vm.error = "An error occurred creating new widget: \n" + err.data;
             });
         }
     }

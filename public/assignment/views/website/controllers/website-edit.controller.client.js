@@ -10,12 +10,12 @@
 
         function init() {
             var siteListPromise = WebsiteService.findWebsitesByUser(vm.userId);
-            siteListPromise.success(function(sites) {
-                vm.websites = sites;
+            siteListPromise.then(function(response) {
+                vm.websites = response.data;
             });
             var websitePromise = WebsiteService.findWebsiteById(vm.websiteId);
-            websitePromise.success(function(site) {
-                vm.website = site;
+            websitePromise.then(function(response) {
+                vm.website = response.data;
             });
         }
         init();
@@ -28,27 +28,28 @@
             var answer = confirm("Delete this website?");
             if (answer) {
                 var promise = WebsiteService.deleteWebsite(vm.websiteId);
-                promise.success(function (status) {
-                    if (status == 'OK') {
+                promise.then(function (response) {
+                    if (response.status == 200) {
                         $location.url("/user/" + vm.userId + "/website");
                     }
-                }).error(function (err) {
-                    vm.error = "An uncaught error occurred deleting your website: \n" + err;
+                }).catch(function (err) {
+                    vm.error = "An uncaught error occurred deleting your website: \n" + err.data;
                 });
             }
         }
 
         function updateWebsite(newSite) {
             var promise = WebsiteService.updateWebsite(vm.websiteId, newSite);
-            promise.success(function(status) {
-                if (status == 'OK') {
+            promise.then(function(response) {
+                if (response.status == 200) {
                     $location.url("/user/" + vm.userId + "/website");
                 }
-            }).error(function(err) {
-                if (err == 'Conflict') {
+            }).catch(function(err) {
+                var status = err.status;
+                if (status == 409) {
                     vm.error = "A website with that name already exists! Please use a different name.";
                 } else {
-                    vm.error = "An uncaught error occurred when updating your website: \n" + err;
+                    vm.error = "An uncaught error occurred when updating your website: \n" + err.data;
                 }
             });
         }

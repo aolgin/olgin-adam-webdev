@@ -11,12 +11,12 @@
 
         function init() {
             var pageListPromise = PageService.findPagesByWebsiteId(vm.websiteId);
-            pageListPromise.success(function(pages) {
-                vm.pages = pages;
+            pageListPromise.then(function(response) {
+                vm.pages = response.data;
             });
             var pagePromise = PageService.findPageById(vm.pageId);
-            pagePromise.success(function(page) {
-                vm.page = page;
+            pagePromise.then(function(response) {
+                vm.page = response.data;
             });
         }
         init();
@@ -28,27 +28,28 @@
             var answer = confirm("Delete this page?");
             if (answer) {
                 var promise = PageService.deletePage(vm.pageId);
-                promise.success(function (status) {
-                    if (status == 'OK') {
+                promise.then(function (response) {
+                    if (response.status == 200) {
                         $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page");
                     }
-                }).error(function (err) {
-                    vm.error = "An error uncaught occurred deleting the page: " + err;
+                }).catch(function (err) {
+                    vm.error = "An error uncaught occurred deleting the page: " + err.data;
                 });
             }
         }
 
         function updatePage(newPage) {
             var promise = PageService.updatePage(vm.pageId, newPage);
-            promise.success(function(status) {
-                if (status == 'OK') {
+            promise.then(function(response) {
+                if (response.status == 200) {
                     $location.url("/user/" + vm.userId + "/website/" + vm.websiteId + "/page");
                 }
-            }).error(function (err) {
-                if (err == 'Conflict') {
+            }).catch(function (err) {
+                var status = err.status;
+                if (status == 409) {
                     vm.error = "A page with that name already exists! Please use a different name";
                 } else {
-                    vm.error = "An uncaught error occurred updating the page: \n" + err;
+                    vm.error = "An uncaught error occurred updating the page: \n" + err.data;
                 }
             });
         }
