@@ -24,6 +24,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 var randomstring = require("randomstring");
+require("./lectures/mongo/movies")(app);
 
 app.set('view engine', 'ejs');
 
