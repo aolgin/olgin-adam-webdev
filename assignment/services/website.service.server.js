@@ -23,7 +23,7 @@ module.exports = function(app) {
         return index;
     }
 
-    function findSiteByNameForUser(uid, name) {
+    function findSiteByNameForUser(name, uid) {
         var site = websites.find(function(w) {
             // Site names are not case sensitive
             return w.developerId === uid &&
@@ -82,7 +82,7 @@ module.exports = function(app) {
 
         var index = findIndexById(req.params['wid']);
         if (site.name != websites[index].name &&
-            findSiteByNameForUser(site.name)) {
+            findSiteByNameForUser(site.name, site.developerId)) {
             res.sendStatus(409);
             return;
         }

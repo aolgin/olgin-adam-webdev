@@ -62,7 +62,6 @@ module.exports = function(app) {
     function updateUser(req, res) {
         var userId = req.params['uid'];
 
-        console.log(req.body);
         var pass = req.body.newPassword;
 
         var index = findIndexById(userId);

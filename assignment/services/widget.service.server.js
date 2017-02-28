@@ -7,6 +7,11 @@ module.exports = function (app) {
     app.post("/api/upload", uploadImage);
     // app.put("/api/page/:pid/widget", updateWidgetOrdering);
 
+    // Additional Widget Dependencies
+    var multer = require('multer'); // npm install multer --save
+    var upload = multer({ dest: __dirname+'/../../public/uploads' });
+    var randomstring = require('randomstring');
+
     var widgets = [
         { "_id": "123", "name": "Gizmodo Heading", "widgetType": "HEADING", "pageId": "321", "size": 2, "text": "GIZMODO", "orderIndex": 0},
         { "_id": "234", "name": "Lorem Heading1", "widgetType": "HEADING", "pageId": "321", "size": 4, "text": "Lorem ipsum", "orderIndex": 1},
@@ -43,26 +48,11 @@ module.exports = function (app) {
         return widgetList.length;
     }
 
-    // Additional Widget Functionality
-
-    var multer = require('multer'); // npm install multer --save
-    var upload = multer({ dest: __dirname+'/../../public/uploads' });
-
-
-    function uploadImage(req, res) {
-        var widgetId      = req.body.widgetId;
-        var width         = req.body.width;
-        var myFile        = req.file;
-
-        var originalname  = myFile.originalname; // file name on user's computer
-        var filename      = myFile.filename;     // new file name in upload folder
-        var path          = myFile.path;         // full path of uploaded file
-        var destination   = myFile.destination;  // folder where file is saved to
-        var size          = myFile.size; //TODO what format does this come in as?
-        var mimetype      = myFile.mimetype;
-
-        res.sendStatus(200);
+    function randomName() {
+        return randomstring.generate(16);
     }
+
+    // Additional Widget Functionality
 
     // Service Functions
 
@@ -70,6 +60,25 @@ module.exports = function (app) {
         var pid = req.params['pid'];
         var newOrder = req.body;
     }*/
+
+    function uploadImage(req, res) {
+
+
+        var widgetId      = req.body.widgetId;
+        var width         = req.body.width;
+        var myFile        = req.file;
+
+        var originalname  = myFile.originalname; // file name on user's computer
+        var filename      = randomName();     // new file name in upload folder
+        var path          = myFile.path;         // full path of uploaded file
+        var destination   = upload;         // folder where file is saved to
+        var size          = myFile.size; //TODO what format does this come in as?
+        var mimetype      = myFile.mimetype;
+
+        var url = destination + filename;
+
+        res.sendStatus(200);
+    }
 
     function findWidgetsByPage(req, res) {
         var pid = req.params['pid'];
@@ -87,6 +96,7 @@ module.exports = function (app) {
         var newWidget = {
             "_id": wgid,
             "pageId": pid,
+            "name": "",
             "widgetType": req.query['widgetType'],
             "created": created,
             "modified": created,
@@ -104,7 +114,7 @@ module.exports = function (app) {
         if (widget) {
             res.json(widget);
         } else {
-            res.sendStatus(404);
+            res.sendStatus(404); // Not Found
         }
     }
 
@@ -113,10 +123,15 @@ module.exports = function (app) {
         var type = widget.widgetType;
         var modified = new Date();
 
+        if (!widget.name) {
+            res.sendStatus(400); // Bad Request
+            return;
+        }
+
         var index = findIndexById(req.params['wgid']);
         if (widget.name != widgets[index].name &&
             findWidgetByName(widget.name)) {
-            res.sendStatus(409);
+            res.sendStatus(409); // Conflict
             return;
         }
         widgets[index].name = widget.name;
