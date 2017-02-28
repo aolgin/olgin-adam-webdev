@@ -23,6 +23,8 @@ app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
 
+var randomstring = require("randomstring");
+
 app.set('view engine', 'ejs');
 
 var bodyParser = require('body-parser');
