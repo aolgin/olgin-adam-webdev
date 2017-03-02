@@ -1,5 +1,15 @@
 <h1>Image Widget Editor</h1>
 
+<label for="editor-btns">Editor Selection</label>
+<div class="btn-group btn-group-justified" id="editor-btns" data-toggle="buttons">
+    <a ng-click="model.changeImageEditorType('url')"
+       class="btn btn-default">URL</a>
+    <a ng-click="model.changeImageEditorType('upload')"
+       class="btn btn-default">Upload</a>
+    <a ng-click="model.changeImageEditorType('flickr')"
+       class="btn btn-default">Flickr</a>
+</div>
+
 <form>
     <div class="form-group">
         <label for="image-name">Name</label>
@@ -15,40 +25,98 @@
                class="form-control"
                id="image-text">
     </div>
-    <div class="form-group">
-        <label for="image-url">URL</label>
-        <input ng-model="model.widget.url"
-               type="url"
-               class="form-control"
-               id="image-url"
-               placeholder="http://cdn.xl.thumbs.canstockphoto.com/canstock2771373.jpg">
+</form>
+<div ng-switch="model.imageEditorType">
+    <div ng-switch-when="flickr">
+        <label for="flickr-search">Flickr Search</label>
+        <div class="input-group">
+            <input type="text"
+                   id="flickr-search"
+                   class="form-control"
+                   placeholder="Search for images..."
+                   ng-model="searchText"/>
+            <a class="input-group-addon btn btn-default"
+               ng-click="model.searchFlickr(searchText)">
+                <span class="glyphicon glyphicon-search"></span>
+            </a>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-4" ng-repeat="photo in model.photos.photo">
+                <img ng-click="model.selectPhoto(photo)"
+                     ng-src="https://farm{{photo.farm}}.staticflickr.com/
+                     {{photo.server}}/{{photo.id}}_{{photo.secret}}_s.jpg"/>
+            </div>
+        </div>
+
+        <h3>Flickr support coming soon!</h3>
     </div>
-    <div class="form-group">
-        <label for="image-width">Width</label>
-        <input ng-model="model.widget.width"
-               type="text"
-               class="form-control"
-               id="image-width"
-               placeholder="100%">
+    <div ng-switch-when="upload">
+        <label for="image-file">Browse &amp; Upload</label>
+        <form action="/api/upload"   method="post" enctype="multipart/form-data" id="image-file">
+            <input  name="myFile"    type="file" class="form-control"/>
+            <input  name="name"     value="{{model.widget.name}}" style="display: none"/>
+            <input  name="text"    value="{{model.widget.text}}"   style="display: none"/>
+            <input  name="width"     value="{{model.widget.width}}" style="display: none"/>
+            <input  name="userId"    value="{{model.userId}}"   style="display: none"/>
+            <input  name="websiteId" value="{{model.websiteId}}"   style="display: none"/>
+            <input  name="pageId"    value="{{model.pageId}}"   style="display: none"/>
+            <input  name="widgetId"  value="{{model.widget._id}}"   style="display: none"/>
+            <button type="submit"    class="btn btn-block btn-primary">Upload Image</button>
+        </form>
+        <!--
+        <div class="form-group">
+            <label for="image-file">Upload</label>
+            <input name="myFile"
+                   type="file"
+                   class="form-control"
+                   id="image-file">
+        </div>
+        <div class="form-group">
+            <label for="up-image-width">Width</label>
+            <input name="width"
+                   type="text"
+                   class="form-control"
+                   id="up-image-width"
+                   placeholder="100%">
+        </div>
+        <button type="submit"
+                class="btn btn-block btn-primary">Submit</button>-->
+        <!--ng-click="model.uploadImage(myFile)"-->
     </div>
-    <!--<div class="form-group">
-        <label for="image-file">Upload</label>
-        <input ng-model="model.widget.file"
-               type="file"
-               class="form-control"
-               id="image-file">
-    </div>-->
+    <div ng-switch-default>
+        <div class="form-group">
+            <label for="image-url">URL</label>
+            <input ng-model="model.widget.url"
+                   type="url"
+                   class="form-control"
+                   id="image-url"
+                   placeholder="http://cdn.xl.thumbs.canstockphoto.com/canstock2771373.jpg">
+        </div>
+        <div class="form-group">
+            <label for="url-image-width">Width</label>
+            <input ng-model="model.widget.width"
+                   type="text"
+                   class="form-control"
+                   id="url-image-width"
+                   placeholder="100%">
+        </div>
+    </div>
+</div>
+
+<!--
     <form action="/api/upload"  method="POST" enctype="multipart/form-data" id="user-img">
-        <input  ng-model="myFile"
-                name="myFile"
+        <input  name="myFile"
                 type="file"
-                class="form-control"/>
+                class="form-control"
+                ado-file-model="myFile"/>
         <input  name="width"    value="{{model.widget.width}}" style="display: none"/>
         <input  name="widgetId" value="{{model.widget._id}}"   style="display: none"/>
         <button type="submit"
                 class="btn btn-block btn-primary"
                 ng-click="model.uploadImage(myFile)">Submit</button>
     </form>
+-->
 
     <div class="form-group">
         <label for="image-preview">Preview</label>

@@ -10,11 +10,28 @@
             "findWidgetsByPageId": findWidgetsByPageId,
             "findWidgetById": findWidgetById,
             "updateWidget": updateWidget,
-            "deleteWidget": deleteWidget
+            "deleteWidget": deleteWidget,
+            // "uploadImage": uploadImage,
+            "cleanupEmptyWidgets": cleanupEmptyWidgets
             // "updateWidgetOrdering": updateWidgetOrdering
         };
         return api;
 
+        function cleanupEmptyWidgets(pid) {
+            return $http.delete("/api/page/" + pid + "/widget");
+        }
+
+        // NOT IN USE
+        // function uploadImage(wgid, file) {
+        //     var fd = new FormData();
+        //     fd.append('file', file);
+        //
+        //     return $http.post("/api/upload?wgid=" + wgid, fd, {
+        //         transformRequest: angular.identity,
+        //         headers: {'Content-Type': undefined}
+        //     });
+        //     // return $http.post("/api/upload?wgid=" + wgid, file)
+        // }
 
         function createWidget(pageId, type) {
             return $http.post("/api/page/" + pageId + "/widget?widgetType=" + type);
