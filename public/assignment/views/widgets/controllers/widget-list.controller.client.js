@@ -12,10 +12,8 @@
         vm.widgetOrder = [];
 
         function init() {
-            var promise = WidgetService.findWidgetsByPageId(vm.pageId);
-            promise.then(function(response) {
-                vm.widgets = response.data;
-            });
+            //TODO: not the best workaround, but will figure something out later
+            cleanupEmptyWidgets();
         }
         init();
 
@@ -24,6 +22,7 @@
         vm.getTrustedHtml = getTrustedHtml;
         vm.getWidgetTemplateUrl = getWidgetTemplateUrl;
         vm.updateWidgetOrdering = updateWidgetOrdering;
+        vm.cleanupEmptyWidgets = cleanupEmptyWidgets;
 
         function getWidgetTemplateUrl(type) {
             return 'views/widgets/templates/widget-' + type + '.view.client.html';
@@ -35,6 +34,22 @@
 
         function trustUrl(url) {
             return $sce.trustAsResourceUrl(url);
+        }
+
+        function renderWidgets() {
+            var promise = WidgetService.findWidgetsByPageId(vm.pageId);
+            promise.then(function(response) {
+                vm.widgets = response.data;
+            });
+        }
+
+        function cleanupEmptyWidgets() {
+            var promise = WidgetService.cleanupEmptyWidgets(vm.pageId);
+            promise.then(function(response) {
+                if(response.status == 200){
+                    renderWidgets();
+                }
+            });
         }
 
         function updateWidgetOrdering() {
