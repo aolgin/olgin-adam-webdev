@@ -72,7 +72,7 @@
                 templateUrl: 'views/widgets/templates/widget-edit.view.client.html',
                 controller: 'WidgetEditController',
                 controllerAs: 'model'
-            })
+            });
 
         // $locationProvider.html5Mode(true);
     }
