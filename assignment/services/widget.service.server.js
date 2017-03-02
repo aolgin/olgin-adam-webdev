@@ -213,6 +213,10 @@ module.exports = function (app) {
             widgets[index].width = widget.width;
         } else if (type === 'HEADING') {
             widgets[index].size = widget.size;
+        } else if (type === 'TEXT') {
+            widgets[index].formatted = widget.formatted;
+            widgets[index].rows = widget.rows;
+            widgets[index].placeholder = widget.placeholder;
         }
 
         res.sendStatus(200);
