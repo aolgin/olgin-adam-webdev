@@ -26,25 +26,25 @@
     </div>
 
     <!--
-    TODO: Running into issues with widgetType not coming through as defined using this method
+    TODO: Running into issues with widgetType not coming through as defined using this method-->
     <ng-include src="model.getEditorTemplateUrl(model.widget.widgetType)"></ng-include>
-    -->
+
 
     <!-- Alternative Method -->
-    <div ng-switch="model.widget.widgetType">
-        <div ng-switch-when="HEADING">
-            <ng-include src="'views/widgets/templates/editors/widget-HEADING-editor.view.client.html'"></ng-include>
-        </div>
-        <div ng-switch-when="IMAGE">
-            <ng-include src="'views/widgets/templates/editors/widget-IMAGE-editor.view.client.html'"></ng-include>
-        </div>
-        <div ng-switch-when="HTML">
-            <ng-include src="'views/widgets/templates/editors/widget-HTML-editor.view.client.html'"></ng-include>
-        </div>
-        <div ng-switch-when="YOUTUBE">
-            <ng-include src="'views/widgets/templates/editors/widget-YOUTUBE-editor.view.client.html'"></ng-include>
-        </div>
-    </div>
+    <!--<div ng-switch="model.widget.widgetType">-->
+        <!--<div ng-switch-when="HEADING">-->
+            <!--<ng-include src="'views/widgets/templates/editors/widget-HEADING-editor.view.client.html'"></ng-include>-->
+        <!--</div>-->
+        <!--<div ng-switch-when="IMAGE">-->
+            <!--<ng-include src="'views/widgets/templates/editors/widget-IMAGE-editor.view.client.html'"></ng-include>-->
+        <!--</div>-->
+        <!--<div ng-switch-when="HTML">-->
+            <!--<ng-include src="'views/widgets/templates/editors/widget-HTML-editor.view.client.html'"></ng-include>-->
+        <!--</div>-->
+        <!--<div ng-switch-when="YOUTUBE">-->
+            <!--<ng-include src="'views/widgets/templates/editors/widget-YOUTUBE-editor.view.client.html'"></ng-include>-->
+        <!--</div>-->
+    <!--</div>-->
 
     <a class="btn btn-success btn-block"
        ng-click="model.updateWidget(model.widget)">

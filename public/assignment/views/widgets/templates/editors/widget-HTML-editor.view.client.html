@@ -8,26 +8,26 @@
                class="form-control"
                id="html-name">
     </div>
-    <div class="form-group">
-        <label for="html-text">Text</label>
-        <textarea ng-model="model.widget.text"
-                  class="form-control"
-                  id="html-text"
-                  placeholder="Raw HTML goes here..."></textarea>
-    </div>
+    <!--<div class="form-group">-->
+        <!--<label for="html-text">Text</label>-->
+        <!--<textarea ng-model="model.widget.text"-->
+                  <!--class="form-control"-->
+                  <!--id="html-text"-->
+                  <!--placeholder="Raw HTML goes here..."></textarea>-->
+    <!--</div>-->
 
-    <!--<label for="html-text">Text</label>
+    <label for="html-text">HTML</label>
     <div ng-model="model.widget.text"
          id="html-text"
          text-angular
          ta-toolbar="[['h1','h2','h3'],['bold','italics','underline','strikeThrough'],
         ['ul','ol'],['justifyLeft','justifyCenter','justifyRight','justifyFull'],
         ['indent','outdent'],['html']]">
-    </div>-->
+    </div>
 
-    <div class="form-group">
+    <!--<div class="form-group">
         <label for="html-preview">Preview</label>
         <div id="html-preview"
              ng-bind-html="model.getTrustedHtml(model.widget.text)"></div>
-    </div>
+    </div>-->
 </form>

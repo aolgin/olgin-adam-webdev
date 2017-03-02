@@ -88,7 +88,9 @@
         }
 
         function getEditorTemplateUrl(type) {
-            return 'views/widgets/templates/editors/widget-' + type + '-editor.view.client.html';
+            if (type) {
+                return 'views/widgets/templates/editors/widget-' + type + '-editor.view.client.html';
+            }
         }
 
         // NOT IN USE
