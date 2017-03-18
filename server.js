@@ -24,13 +24,14 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 var randomstring = require("randomstring");
-require("./lectures/mongo/movies")(app);
 
 app.set('view engine', 'ejs');
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+require("./lectures/mongo/movies")(app);
 
 // configure a public directory to host static content
 app.use(express.static(__dirname + '/public'));
