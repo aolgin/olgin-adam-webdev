@@ -26,6 +26,7 @@
                id="image-text">
     </div>
 </form>
+
 <div ng-switch="model.imageEditorType">
     <div ng-switch-when="flickr">
         <label for="flickr-search">Flickr Search</label>
@@ -139,12 +140,4 @@
         <img id="image-preview" width="100%" ng-src="{{model.widget.url}}"/>
     </div>
 
-<!--    <div class="form-group">
-        <label for="flickr-search">Flickr Search</label>
-        <span id="flickr-search">
-            <a href="widget-flickr-search.view.client.html" class="btn btn-default" type="button">
-                <span class="glyphicon glyphicon-search"></span>
-            </a>
-        </span>
-    </div>-->
 </form>

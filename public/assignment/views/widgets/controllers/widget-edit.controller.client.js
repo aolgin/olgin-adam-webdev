@@ -66,24 +66,6 @@
             vm.imageEditorType = type;
         }
 
-        // function searchFlickr(txt) {
-        //     FlickrService
-        //         .searchPhotos(txt)
-        //         .then(function(response) {
-        //             data = response.data.replace("jsonFlickrApi(","");
-        //             data = data.substring(0,data.length - 1);
-        //             data = JSON.parse(data);
-        //             vm.photos = data.photos;
-        //         });
-        // }
-        //
-        // function selectFlickrPhoto(photo) {
-        //     var url = "https://farm" + photo.farm + ".staticflickr.com/" + photo.server;
-        //     url += "/" + photo.id + "_" + photo.secret + "_b.jpg";
-        //     // var promise = WidgetService.updateWidget(websiteId, pageId, widgetId, {url: url})
-        //     //     .then(...);
-        // }
-
         // vm.submit = function(){ //function to call on form submit
         //     if (vm.upload_form.file.$valid &amp;&amp; vm.file) { //check if from is valid
         //         vm.upload(vm.file); //call upload function
