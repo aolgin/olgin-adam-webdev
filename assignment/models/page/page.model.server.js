@@ -1,5 +1,4 @@
-module.exports = function () {
-    var model = {};
+module.exports = function (model) {
     var mongoose = require("mongoose");
     var PageSchema = require("./page.schema.server")();
     var PageModel  = mongoose.model("PageModel", PageSchema);
@@ -8,6 +7,7 @@ module.exports = function () {
         createPage: createPage,
         findPageById: findPageById,
         findPagesForWebsite: findPagesForWebsite,
+        findWidgetsForPage: findWidgetsForPage,
         updatePage: updatePage,
         removePage: removePage,
         setModel: setModel
@@ -18,10 +18,11 @@ module.exports = function () {
         model = _model;
     }
 
-    function findPagesForWebsite(wid) {
+    // TODO get around to doing this
+    function findWidgetsForPage(pid) {
         return PageModel
-            .findById(wid)
-            .populate("pages", "name")
+            .findById(pid)
+            .populate("widgets", "name")
             .exec();
     }
 
@@ -35,17 +36,34 @@ module.exports = function () {
             },
             {
                 name: page.name,
-                description: page.description
+                description: page.description,
+                dateModified: page.dateModified
             }
         );
     }
 
     function findPageById(pid) {
-        // UserModel.find({_id: userId}) --> returns an array
         return PageModel.findById(pid);
     }
 
-    function createPage(page) {
-        return PageModel.create(page);
+    function createPage(wid, page) {
+        return PageModel
+            .create(page)
+            .then(function(pageObj){
+                model.websiteModel
+                    .findWebsiteById(wid)
+                    .then(function(websiteObj){
+                        pageObj._website = websiteObj._id;
+                        pageObj.save();
+                        websiteObj.pages.push(pageObj);
+                        return websiteObj.save();
+                    }, function(error){
+                        console.log(error);
+                    });
+            });
+    }
+
+    function findPagesForWebsite(wid) {
+        return model.websiteModel.findPagesForWebsite(wid);
     }
 };

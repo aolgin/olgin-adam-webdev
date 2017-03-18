@@ -8,20 +8,22 @@ module.exports = function () {
         findUserById: findUserById,
         findUserByCredentials: findUserByCredentials,
         findWebsitesForUser: findWebsitesForUser,
+        findUserByUsername: findUserByUsername,
         updateUser: updateUser,
-        removeUser: removeUser
-        // setModel: setModel
+        removeUser: removeUser,
+        updatePassword: updatePassword,
+        setModel: setModel
     };
     return api;
 
-    /*function setModel(_model) {
+    function setModel(_model) {
         model = _model;
-    }*/
+    }
 
     function findWebsitesForUser(userId) {
         return UserModel
             .findById(userId)
-            .populate("websites", "name")
+            .populate("websites", "name dateModified _user")
             .exec();
     }
 
@@ -36,13 +38,33 @@ module.exports = function () {
         });
     }
 
+
+    function findUserByUsername(username) {
+        return UserModel.findOne({
+            username: username
+        });
+    }
+
     function updateUser(userId, user) {
         return UserModel.update({
             _id: userId
         },
             {
-                first: user.first,
-                last: user.last
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                password: user.password,
+                dateModified: user.dateModified
+            }
+        );
+    }
+
+    function updatePassword(userId, password) {
+        return UserModel.update({
+            _id: userId
+        },
+            {
+                password: password
             }
         );
     }

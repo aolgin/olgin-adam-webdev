@@ -4,11 +4,11 @@ module.exports = function() {
     var UserSchema = mongoose.Schema({
         username: String,
         password: String,
-        first: String,
-        last: String,
+        firstName: String,
+        lastName: String,
         email: String,
-        dateCreated: Date,
-        dateModified: Date,
+        dateCreated: {type: Date, default: Date.now},
+        dateModified: {type: Date, default: Date.now},
         websites: [{type: mongoose.Schema.Types.ObjectId, ref:'WebsiteModel'}]
     }, {collection: "user"});
     return UserSchema;

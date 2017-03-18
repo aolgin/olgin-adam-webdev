@@ -18,8 +18,9 @@
                     $location.url('/profile/' + user._id);
                 }
             }).catch(function (err) {
+                console.log(err);
                 var status = err.status;
-                if (status == 200) {
+                if (status == 404) {
                     vm.error = 'No user found with the following username: ' + user.username;
                 }
                 else {

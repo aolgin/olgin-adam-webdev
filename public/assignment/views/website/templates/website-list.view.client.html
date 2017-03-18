@@ -30,13 +30,8 @@
                 <div class="col-sm-3 hidden-xs">
                     Last Modified
                 </div>
-                <div class="col-sm-2 hidden-xs">
+                <div class="col-sm-3 hidden-xs">
                     Owner
-                </div>
-                <div class="col-xs-2">
-                    <a href="#/user/{{model.userId}}/website/new" class="pull-right">
-                        <span class="glyphicon glyphicon-plus"></span>
-                    </a>
                 </div>
             </div>
         </li>
@@ -48,10 +43,10 @@
                     </a>
                 </div>
                 <div class="col-sm-3 hidden-xs">
-                    {{website.created | date}}
+                    {{website.dateModified | date}}
                 </div>
                 <div class="col-sm-2 hidden-xs">
-                    {{website.developerId}}
+                    {{website._user}}
                 </div>
                 <div class="col-xs-2">
                     <a href="#/user/{{model.userId}}/website/{{website._id}}">

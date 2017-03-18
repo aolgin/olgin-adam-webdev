@@ -1,15 +1,11 @@
-module.exports = function(app) {
+module.exports = function(app, model) {
+    var pageModel = model.pageModel;
+
     app.get("/api/website/:wid/page", findPagesByWebsite);
     app.post("/api/website/:wid/page", createPage);
     app.get("/api/page/:pid", findPageById);
     app.delete("/api/page/:pid", deletePage);
     app.put("/api/page/:pid", updatePage);
-
-    var pages = [
-        { "_id": "321", "name": "Post 1", "websiteId": "456", "description": "Lorem" },
-        { "_id": "432", "name": "Post 2", "websiteId": "456", "description": "Lorem" },
-        { "_id": "543", "name": "Post 3", "websiteId": "456", "description": "Lorem" }
-    ];
 
     // Helper Functions
 
@@ -32,67 +28,67 @@ module.exports = function(app) {
 
     function findPagesByWebsite(req, res) {
         var wid = req.params['wid'];
-        var pps = pages.filter(function(p) {
-            return p.websiteId === wid;
-        });
-        res.json(pps);
+
+        model.websiteModel.findPagesForWebsite(wid)
+            .then(function (response) {
+                res.json(response.pages);
+            }, function (err) {
+                console.log(err);
+                res.sendStatus(500);
+            });
     }
 
+
     function createPage(req, res) {
-        var page = req.body;
-        var pageExists = findPageByName(page.name);
-        if (!pageExists) {
-            var pid = String(new Date().getTime());
-            var created = new Date();
-            var newPage = {
-                "_id": pid,
-                "websiteId": req.params['wid'],
-                "name": page.name,
-                "description": page.description,
-                "created": created,
-                "modified": created
-            };
-            pages.push(newPage);
-            res.sendStatus(200);
-        } else {
-            res.sendStatus(409);
-        }
+        var newPage = req.body;
+        var wid = req.params['wid'];
+
+        pageModel.createPage(wid, newPage)
+            .then(function (page) {
+                res.json(page);
+            }, function (err) {
+                console.log(err);
+                res.sendStatus(409);
+            });
     }
 
     function findPageById(req, res) {
         var pid = req.params['pid'];
-        var page = pages.find(function(p) {
-            return p._id === pid;
-        });
-        if (page) {
-            res.json(page);
-        } else {
-            res.sendStatus(404);
-        }
+        pageModel
+            .findPageById(pid)
+            .then(function (page) {
+                res.json(page);
+            }, function (err) {
+                console.log(err);
+                res.sendStatus(404);
+            });
     }
 
     function updatePage(req, res) {
         var page = req.body;
-        var modified = new Date();
+        var pid = req.params['pid'];
+        page.dateModified = new Date();
 
-        var index = findIndexById(req.params['pid']);
-        if (page.name != pages[index].name &&
-            findPageByName(page.name)) {
-            res.sendStatus(409);
-            return;
-        }
-
-        pages[index].name = page.name;
-        pages[index].description = page.description;
-        pages[index].modified = modified;
-
-        res.sendStatus(200);
+        pageModel.updatePage(pid, page)
+            .then(function (response) {
+                res.sendStatus(200);
+            }, function (err) {
+                console.log(err);
+                res.sendStatus(409);
+            });
     }
 
     function deletePage(req, res) {
-        var index = findIndexById(req.params['pid']);
-        pages.splice(index, 1);
-        res.sendStatus(200);
+        var pid = req.params['pid'];
+
+        pageModel
+            .removePage(pid)
+            .then(function (response) {
+                res.sendStatus(200);
+            }, function (err) {
+                console.log(err);
+                res.sendStatus(500);
+            })
     }
 
 };
