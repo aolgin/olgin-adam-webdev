@@ -3,7 +3,7 @@
         .module("WebAppMaker")
         .controller("WidgetEditController", WidgetEditController);
 
-    function WidgetEditController($routeParams, $location, $sce, WidgetService) { //FlickrService
+    function WidgetEditController($routeParams, $location, $sce, WidgetService, FlickrService) {
         var vm = this;
         vm.userId = $routeParams['uid'];
         vm.websiteId = $routeParams['wid'];
@@ -16,6 +16,8 @@
             promise.then(function(response) {
                vm.widget = response.data;
             });
+            vm.showPhotos = false;
+            vm.flickrPageNum = 1;
         }
         init();
 
@@ -25,10 +27,40 @@
         vm.getEditorTemplateUrl = getEditorTemplateUrl;
         vm.trustUrl = trustUrl;
         vm.getTrustedHtml = getTrustedHtml;
-        // vm.searchFlickr = searchFlickr;
-        // vm.selectFlickrPhoto = selectFlickrPhoto;
+
+        vm.searchFlickr = searchFlickr;
+        vm.selectFlickrPhoto = selectFlickrPhoto;
         // vm.submit = submit;
         // vm.uploadImage = uploadImage;
+
+        function searchFlickr(searchTerm, pageChange) {
+            // to help with pagination
+            vm.flickrPageNum += pageChange;
+            if (vm.flickrPageNum < 1) { // don't rerun search if going back from the first page
+                vm.flickrPageNum = 1;
+                return;
+            }
+
+            FlickrService
+                .searchPhotos(searchTerm, vm.flickrPageNum)
+                .then(function(response) {
+                    data = response.data.replace("jsonFlickrApi(","");
+                    data = data.substring(0, data.length - 1);
+                    data = JSON.parse(data);
+                    vm.photos = data.photos;
+                }).catch(function(err) {
+                    vm.error = "An error occurred trying to search flickr: \n" + err.data;
+                }
+            );
+            vm.showPhotos = true;
+        }
+
+        function selectFlickrPhoto(photo) {
+            var url = "https://farm" + photo.farm + ".staticflickr.com/" + photo.server;
+            url += "/" + photo.id + "_" + photo.secret + "_b.jpg";
+            vm.widget.url = url;
+            vm.showPhotos = false;
+        }
 
         function changeImageEditorType(type) {
             vm.imageEditorType = type;

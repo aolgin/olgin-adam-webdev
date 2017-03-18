@@ -36,16 +36,32 @@
                    placeholder="Search for images..."
                    ng-model="searchText"/>
             <a class="input-group-addon btn btn-default"
-               ng-click="model.searchFlickr(searchText)">
+               ng-click="model.searchFlickr(searchText, 0)">
                 <span class="glyphicon glyphicon-search"></span>
             </a>
         </div>
 
-        <div class="row">
+        <br>
+
+        <div ng-show="model.showPhotos" class="row container-fluid">
             <div class="col-xs-4" ng-repeat="photo in model.photos.photo">
-                <img ng-click="model.selectPhoto(photo)"
-                     ng-src="https://farm{{photo.farm}}.staticflickr.com/
-                     {{photo.server}}/{{photo.id}}_{{photo.secret}}_s.jpg"/>
+                <img ng-click="model.selectFlickrPhoto(photo)"
+                     width="100%"
+                     ng-src="https://farm{{photo.farm}}.staticflickr.com/{{photo.server}}/{{photo.id}}_{{photo.secret}}_s.jpg"/>
+            </div>
+
+            <!--
+                TODO: This is a very basic pagination implementation that has some limitations
+                 such as not checking whether you're at the final page of results.
+            -->
+            <br>
+            <div class="col-xs-12 btn-block btn-group btn-group-justified">
+                <span class="btn btn-block btn-default">
+                    <a class="glyphicon glyphicon-chevron-left" ng-click="model.searchFlickr(searchText, -1)"></a>
+                </span>
+                <span class="btn btn-block btn-default">
+                    <a class="glyphicon glyphicon-chevron-right" ng-click="model.searchFlickr(searchText, 1)"></a>
+                </span>
             </div>
         </div>
 
@@ -57,7 +73,7 @@
             <input  name="myFile"    type="file" class="form-control"/>
             <input  name="name"     value="{{model.widget.name}}" style="display: none"/>
             <input  name="text"    value="{{model.widget.text}}"   style="display: none"/>
-            <input  name="width"     value="{{model.widget.width}}" style="display: none"/>
+            <input  name="width"     value="{{model.widget.width}}%" style="display: none"/>
             <input  name="userId"    value="{{model.userId}}"   style="display: none"/>
             <input  name="websiteId" value="{{model.websiteId}}"   style="display: none"/>
             <input  name="pageId"    value="{{model.pageId}}"   style="display: none"/>
