@@ -12,20 +12,9 @@
             "createUser": createUser,
             "findUserByUsername": findUserByUsername,
             "deleteUserById": deleteUserById,
-            "doPasswordsMatch": doPasswordsMatch,
             "updatePassword": updatePassword
         };
         return api;
-
-        // Helper Functions
-
-        function doPasswordsMatch(initPass, confirmPass) {
-            if (initPass != null && confirmPass != null) {
-                return initPass === confirmPass;
-            } else {
-                return false;
-            }
-        }
 
         // Controller Functions
 

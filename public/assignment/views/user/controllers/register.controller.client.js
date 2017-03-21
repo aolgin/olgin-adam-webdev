@@ -9,7 +9,7 @@
 
         function register(newUser) {
             // This is done client-side, so no need to put it within the promise execution
-            if (!UserService.doPasswordsMatch(newUser.password, newUser.confirmPass)) {
+            if (newUser.password != newUser.confirmPass) {
                 vm.error = "Passwords do not match!";
                 return;
             }

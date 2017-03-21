@@ -12,6 +12,11 @@
         init();
 
         function updatePassword(passList) {
+            if (passList.newPassword != passList.confirmPassword) {
+                vm.error = "Passwords do not match!";
+                return;
+            }
+
             var promise = UserService.updatePassword(vm.userId, passList);
             promise.then(function (response) {
                 if (response.status == 200) {
@@ -21,9 +26,7 @@
             }).catch(function (err) {
                 var status = err.status;
                 vm.message = null;
-                if (status == 409) {
-                    vm.error = 'New passwords do not match!';
-                } else if (status == 401) {
+                if (status == 401) {
                     vm.error = 'Your current password does not match the one on file';
                 } else {
                     vm.error = 'An uncaught error occurred when updating your password: \n' + err.data;

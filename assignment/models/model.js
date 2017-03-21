@@ -19,26 +19,10 @@ module.exports = function() {
         mongojs: mongojs
     };
 
-    userModel.setModel(model);
-    websiteModel.setModel(model);
-    pageModel.setModel(model);
-    widgetModel.setModel(model);
-
-    return model;
-
-    //
-    // var model = {
-    //     userModel        : require("./user/user.model.server")(),
-    //     websiteModel     : require("./website/website.model.server")(),
-    //     pageModel        : require("./page/page.model.server")(),
-    //     widgetModel      : require("./widget/widget.model.server")(),
-    //     mongojs          : mongojs
-    // };
-    //
-    // model.userModel.setModel(model);
-    // model.websiteModel.setModel(model);
-    // model.pageModel.setModel(model);
-    // model.widgetModel.setModel(model);
+    model.userModel.setModel(model);
+    model.websiteModel.setModel(model);
+    model.pageModel.setModel(model);
+    model.widgetModel.setModel(model);
 
     return model;
 };

@@ -50,10 +50,10 @@ module.exports = function () {
             _id: userId
         },
             {
+                username: user.username,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email,
-                password: user.password,
                 dateModified: user.dateModified
             }
         );
@@ -70,7 +70,6 @@ module.exports = function () {
     }
 
     function findUserById(userId) {
-        // UserModel.find({_id: userId}) --> returns an array
         return UserModel.findById(userId);
     }
 

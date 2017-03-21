@@ -4,6 +4,8 @@
   "description": "Web Dev at Northeastern University",
   "main": "server.js",
   "dependencies": {
+    "angular-ui-router": "^0.4.2",
+    "aws-sdk": "^2.28.0",
     "body-parser": "^1.15.1",
     "cookie-parser": "^1.4.3",
     "ejs": "^2.5.3",
@@ -18,7 +20,6 @@
     "passport-google-oauth": "^1.0.0",
     "passport-local": "^1.0.0",
     "q": "^1.4.1",
-    "randomstring": "^1.1.5",
     "requirejs": "^2.3.2",
     "underscore": "^1.8.3"
   },

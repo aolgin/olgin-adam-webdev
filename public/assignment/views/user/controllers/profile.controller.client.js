@@ -28,7 +28,7 @@
             }).catch(function(err) {
                 vm.message = null;
                 var status = err.status;
-                if (status == 200) {
+                if (status == 409) {
                     vm.error = "A user with that username already exists!";
                 } else {
                     vm.error = "An uncaught error occurred updating your user information: \n" + err.data;
