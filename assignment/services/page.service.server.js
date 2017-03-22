@@ -48,7 +48,7 @@ module.exports = function(app, model) {
                 res.json(page);
             }, function (err) {
                 console.log(err);
-                res.sendStatus(409);
+                res.sendStatus(500);
             });
     }
 
@@ -57,24 +57,27 @@ module.exports = function(app, model) {
         pageModel
             .findPageById(pid)
             .then(function (page) {
-                res.json(page);
+                if (page) {
+                    res.json(page);
+                } else {
+                    res.sendStatus(404);
+                }
             }, function (err) {
                 console.log(err);
-                res.sendStatus(404);
+                res.sendStatus(500);
             });
     }
 
     function updatePage(req, res) {
         var page = req.body;
         var pid = req.params['pid'];
-        page.dateModified = new Date();
 
         pageModel.updatePage(pid, page)
             .then(function (response) {
                 res.sendStatus(200);
             }, function (err) {
                 console.log(err);
-                res.sendStatus(409);
+                res.sendStatus(500);
             });
     }
 

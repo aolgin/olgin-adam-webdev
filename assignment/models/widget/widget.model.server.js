@@ -11,6 +11,7 @@ module.exports = function (model) {
         findWidgetsForPage: findWidgetsForPage,
         updateWidget: updateWidget,
         removeWidget: removeWidget,
+        reorderWidget: reorderWidget,
         setModel: setModel
     };
     return api;
@@ -19,16 +20,36 @@ module.exports = function (model) {
         model = _model;
     }
 
+    function reorderWidget(pid, start, end) {
+        var deferred = q.defer();
+        WidgetModel.update(
+            {
+                _page: pid,
+                orderIndex: start
+            },
+            {
+                orderIndex: end
+            }, function (err, status) {
+            if (err) {
+                deferred.reject(err);
+            } else {
+                deferred.resolve(status);
+            }
+        });
+        return deferred.promise;
+    }
+
     function findWidgetsForPage(pid) {
         var deferred = q.defer();
         PageModel
             .findById(pid)
-            .populate("widgets")
+            .populate("widgets", { sort: { 'orderIndex': 1 }}) //  sort in ascending order
             .exec(
                 function (err, results) {
                     if (err) {
                         deferred.reject(err);
                     } else {
+                        var sortedWidgets =
                         deferred.resolve(results);
                     }
                 }
@@ -57,8 +78,7 @@ module.exports = function (model) {
             },
             {
                 name: widget.name,
-                description: widget.description,
-                dateModified: widget.dateModified
+                description: widget.description
             },
             function (err, status) {
                 if (err) {

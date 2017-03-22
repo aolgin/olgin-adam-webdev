@@ -1,4 +1,4 @@
-module.exports = function(app, model) {
+    module.exports = function(app, model) {
     var websiteModel = model.websiteModel;
 
     app.get("/api/user/:uid/website", findWebsitesByUser);
@@ -6,18 +6,6 @@ module.exports = function(app, model) {
     app.get("/api/website/:wid", findWebsiteById);
     app.delete("/api/website/:wid", deleteWebsite);
     app.put("/api/website/:wid", updateWebsite);
-
-
-    // Helper Functions
-
-    // function findSiteByNameForUser(name, uid) {
-    //     var site = websites.find(function(w) {
-    //         // Site names are not case sensitive
-    //         return w.developerId === uid &&
-    //             w.name.toUpperCase() === name.toUpperCase();
-    //     });
-    //     return site;
-    // }
 
     // Service Functions
 
@@ -42,7 +30,7 @@ module.exports = function(app, model) {
                 res.json(site);
             }, function (err) {
                 console.log(err);
-                res.sendStatus(409);
+                res.sendStatus(500);
             });
     }
 
@@ -52,24 +40,27 @@ module.exports = function(app, model) {
         websiteModel
             .findWebsiteById(wid)
             .then(function (site) {
-                res.json(site);
+                if (site) {
+                    res.json(site);
+                } else {
+                    res.sendStatus(404);
+                }
             }, function (err) {
                 console.log(err);
-                res.sendStatus(404);
+                res.sendStatus(500);
             });
     }
 
     function updateWebsite(req, res) {
         var newSite = req.body;
         var wid = req.params['wid'];
-        newSite.dateModified = new Date();
 
         websiteModel.updateWebsite(wid, newSite)
             .then(function (response) {
                 res.sendStatus(200);
             }, function (err) {
                 console.log(err);
-                res.sendStatus(409);
+                res.sendStatus(500);
             });
     }
 

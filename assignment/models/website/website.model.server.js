@@ -83,8 +83,7 @@ module.exports = function (model) {
         },
             {
                 name: site.name,
-                description: site.description,
-                dateModified: site.dateModified
+                description: site.description
             }, function (err, status) {
                 if (err) {
                     deferred.reject(err);

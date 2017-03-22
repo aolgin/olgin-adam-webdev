@@ -13,7 +13,11 @@ module.exports = function(app, model) {
         userModel
             .findUserByUsername(uname)
             .then(function(user) {
-                return user;
+                if (user) {
+                    return user;
+                } else {
+                    return null;
+                }
             }, function (err) {
                 console.log(err);
                 return null;
@@ -29,10 +33,15 @@ module.exports = function(app, model) {
         userModel
             .findUserByCredentials(username, password)
             .then(function(user) {
-                res.json(user);
-            }).catch(function (err) {
+                if (user) {
+                    res.json(user);
+                } else {
+                    res.sendStatus(404);
+                }
+            })
+            .catch(function (err) {
                 console.log(err);
-                res.sendStatus(404);
+                res.sendStatus(500);
             });
     }
 
@@ -42,10 +51,14 @@ module.exports = function(app, model) {
         userModel
             .findUserById(uid)
             .then(function (user) {
-                res.json(user);
-            }, function (err) {
+                if (user) {
+                    res.json(user);
+                } else {
+                    res.sendStatus(404);
+                }
+            }).catch(function (err) {
                 console.log(err);
-                res.sendStatus(404);
+                res.sendStatus(500);
             });
     }
 
@@ -53,71 +66,70 @@ module.exports = function(app, model) {
         var uid = req.params['uid'];
         var passList = req.body;
 
-        var userToUpdate;
         userModel
             .findUserById(uid)
             .then(function (user) {
-                userToUpdate = user;
-            }, function (err) {
-                userToUpdate = null;
-                console.log(err);
-                res.sendStatus(404);
-            });
-
-        if (userToUpdate && userToUpdate != null) {
-            if (userToUpdate.password === passList.currentPassword) {
-                if (passList.newPassword === passList.confirmPassword) {
-                    userToUpdate.password = passList.newPassword;
-                    userModel.updateUser(uid, userToUpdate)
-                        .then(function (response) {
-                            res.sendStatus(200);
-                        }, function (err) {
-                            console.log(err);
-                            res.sendStatus(500);
-                        });
+                if (user) {
+                    if (user.password === passList.currentPassword) {
+                        userModel.updatePassword(uid, passList.newPassword)
+                            .then(function (response) {
+                                res.sendStatus(200);
+                            }).catch(function (err) {
+                                console.log(err);
+                                res.sendStatus(500);
+                            });
+                    } else {
+                        res.sendStatus(401);
+                    }
                 } else {
-                    res.sendStatus(409);
+                    res.sendStatus(404);
                 }
-            } else {
-                res.sendStatus(401);
-            }
-        } else { res.sendStatus(500); }
+            }).catch(function (err) {
+                console.log(err);
+                res.sendStatus(500);
+            });
     }
 
     function updateUser(req, res) {
         var uid = req.params['uid'];
         var newInfo = req.body;
-        newInfo.dateModified = new Date();
 
         if (newInfo.newPassword) {
             updatePassword(req, res);
             return;
         }
 
-        userModel
-            .updateUser(uid, newInfo)
-            .then(function (response) {
-                res.sendStatus(response.status);
-            }, function (err) {
-                console.log(err);
-                res.sendStatus(400);
-            });
+        var promise = userModel.updateUser(uid, newInfo);
+        promise.then(function (response) {
+            res.sendStatus(200);
+        }).catch(function (err) {
+            console.log(err);
+            // If username is a duplicate
+            if (err.code == 11000) {
+                res.sendStatus(409);
+            } else {
+                res.sendStatus(500);
+            }
+        });
     }
 
     function createUser(req, res) {
         var newUser = req.body;
-
-        var userExists = findUserByUsername(newUser.username);
-        if (!userExists) {
-            userModel
-                .createUser(newUser)
-                .then(function (user) {
-                    res.json(user);
-                }, function (err) {
-                    console.log(err);
-                    res.sendStatus(500);
-                });
-        }
+        var promise = userModel.createUser(newUser);
+        promise.then(function (user) {
+            if (user) {
+                res.json(user);
+            }
+        })
+        .catch(function (err) {
+            console.log(err);
+            // if username is a duplicate
+            if (err.code == 11000) {
+                res.sendStatus(409);
+            } else {
+                res.sendStatus(500);
+            }
+        });
     }
 
     function deleteUserById(req, res) {
@@ -127,7 +139,7 @@ module.exports = function(app, model) {
             .removeUser(uid)
             .then(function (response) {
                 res.sendStatus(200);
-            }, function (err) {
+            }).catch(function (err) {
                 console.log(err);
                 res.sendStatus(500);
             })

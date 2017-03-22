@@ -58,8 +58,7 @@ module.exports = function (model) {
             },
             {
                 name: page.name,
-                description: page.description,
-                dateModified: page.dateModified
+                description: page.description
             },
             function (err, status) {
                 if (err) {

@@ -3,6 +3,7 @@ module.exports = function() {
     var mongoose = require('mongoose');
     var mongojs  = require('mongojs');
 
+    mongoose.Promise = require('q').Promise;
     mongoose.connect('mongodb://localhost/web-app-maker');
     mongojs('web-app-maker');
 

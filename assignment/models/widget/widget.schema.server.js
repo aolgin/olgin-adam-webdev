@@ -19,9 +19,7 @@ module.exports = function () {
         icon: String,
         deletable: Boolean,
         formatted: Boolean,
-        dateCreated: {type: Date, default: Date.now},
-        dateModified: {type: Date, default: Date.now},
         justCreated: Boolean
-    }, {collection: "widget"});
+    }, {collection: "widget", timestamps: true});
     return WidgetSchema;
 };

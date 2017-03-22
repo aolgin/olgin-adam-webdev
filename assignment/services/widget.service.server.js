@@ -1,19 +1,22 @@
 module.exports = function (app) {
+
+    var widgetModel = model.widgetModel;
     // Additional Widget Dependencies
-    var multer = require('multer'); // npm install multer --save
+    var multer = require('multer');
     var upload = multer({ dest: __dirname+'/../../public/uploads' });
     var fs = require('fs');
-    var randomstring = require('randomstring');
 
     app.get("/api/page/:pid/widget", findWidgetsByPage);
     app.post("/api/page/:pid/widget", createWidget);
     app.delete("/api/page/:pid/widget", cleanupEmptyWidgets);
+    app.get("/api/widget/flickr", getFlickrApi);
     app.get("/api/widget/:wgid", findWidgetById);
     app.delete("/api/widget/:wgid", deleteWidget);
     app.put("/api/widget/:wgid", updateWidget);
     app.post("/api/upload", upload.single('myFile'), uploadImage);
     app.delete("/api/upload/:img", deleteImage);
-    // app.put("/api/page/:pid/widget", updateWidgetOrdering);
+    app.get("/api/widget/flickr", getFlickrApi);
+    app.put("/api/page/:pid/widget", reorderWidget);
 
     var widgets = [
         { "_id": "123", "name": "Gizmodo Heading", "widgetType": "HEADING", "pageId": "321", "size": 2, "text": "GIZMODO", "orderIndex": 0},
@@ -24,7 +27,10 @@ module.exports = function (app) {
         { "_id": "567", "name": "Lorem Heading2", "widgetType": "HEADING", "pageId": "321", "size": 4, "text": "Lorem ipsum", "orderIndex": 4},
         { "_id": "678", "name": "Youtube Widget1", "text": "lorem", "widgetType": "YOUTUBE", "pageId": "321", "width": "100%",
             "url": "https://www.youtube.com/AM2Ivdi9c4E", "orderIndex": 5 },
-        { "_id": "789", "name": "RawHTML2", "widgetType": "HTML", "pageId": "321", "text": "<p>Lorem ipsum</p>", "orderIndex": 6}
+        { "_id": "789", "name": "RawHTML2", "widgetType": "HTML", "pageId": "321", "text": "<p>Lorem ipsum</p>", "orderIndex": 6},
+        { "_id": "6121", "name": "Gizmodo Heading5", "widgetType": "HEADING", "pageId": "58d07b96127bc3526c90a81b", "size": 3, "text": "UIO", "orderIndex": 0},
+        { "_id": "7651", "name": "Gizmodo Heading6", "widgetType": "HEADING", "pageId": "58d07b96127bc3526c90a81b", "size": 2, "text": "GIZMODAI", "orderIndex": 1},
+        { "_id": "8765", "name": "Gizmodo Heading2", "widgetType": "HEADING", "pageId": "58d07b96127bc3526c90a81b", "size": 2, "text": "GIZMODO", "orderIndex": 2}
     ];
 
     // Helper Functions
@@ -51,13 +57,6 @@ module.exports = function (app) {
         return widgetList.length;
     }
 
-    // Currently unused. Was put into place before realizing multer already randomly generated a name
-    function randomName(strlen) {
-        // strlen is an optional argument. If unspecified, use 16 for the default len
-        strlen = strlen == null ? 16 : strlen;
-        return randomstring.generate(strlen);
-    }
-
     // Additional Widget Functionality
 
     /*var storage = multer.diskStorage({
@@ -75,10 +74,28 @@ module.exports = function (app) {
 
     // Service Functions
 
-/*    function updateWidgetOrdering(req, res) {
+    function reorderWidget(req, res) {
         var pid = req.params['pid'];
-        var newOrder = req.body;
-    }*/
+        var start = req.query['startIndex'];
+        var end = req.query['endIndex'];
+
+        widgetModel.reorderWidget(pid, start, end)
+            .then(function (status) {
+                console.log(status);
+                // res.sendStatus(status);
+            }, function (err) {
+                console.log(err);
+                res.sendStatus(500);
+            });
+        console.log(result);
+        res.sendStatus(200);
+        // res.send(result);
+    }
+
+    function getFlickrApi(req, res) {
+        var key = process.env.FLICKR_API_KEY;
+        res.send(key);
+    }
 
 /*    function uploadImage(req, res) {
         upload(req, res, function(err){
@@ -139,7 +156,7 @@ module.exports = function (app) {
         var pid = req.params['pid'];
         var wgs = widgets.filter(function(w) {
             return w.pageId === pid &&
-                w.new === true;
+                w.newWidget === true;
         });
         for (var w in wgs) {
             var index = findIndexById(w._id);
@@ -154,6 +171,16 @@ module.exports = function (app) {
             return w.pageId === pid;
         });
         res.json(wgs);
+
+        // var pid = req.params['pid'];
+        //
+        // model.pageModel.findWidgetsForPage(pid)
+        //     .then(function (response) {
+        //         res.json(response.pages);
+        //     }, function (err) {
+        //         console.log(err);
+        //         res.sendStatus(500);
+        //     });
     }
 
     function createWidget(req, res) {
@@ -166,13 +193,30 @@ module.exports = function (app) {
             "pageId": pid,
             "name": "",
             "widgetType": req.query['widgetType'],
-            "created": created,
-            "modified": created,
             "orderIndex": orderIndex,
             "new": true
         };
         widgets.push(newWidget);
         res.send(wgid);
+
+        // var pid = req.params['pid'];
+        // var created = new Date();
+        // var orderIndex = numWidgetsByPage(pid); // Set as the last widget on the page by default
+        //
+        // var newWidget = {
+        //     "widgetType": req.query['widgetType']
+        //     "orderIndex": orderIndex,
+        //     "justCreated": true
+        // };
+        //
+        // widgetModel.createWidget(pid, newWidget)
+        //     .then(function (response) {
+        //         console.log(response);
+        //         res.send(response);
+        //     }, function (err) {
+        //         console.log(err);
+        //         res.sendStatus(500);
+        //     });
     }
 
     function findWidgetById(req, res) {
@@ -185,9 +229,25 @@ module.exports = function (app) {
         } else {
             res.sendStatus(404); // Not Found
         }
+
+        // var wgid = req.params['wgid'];
+        //
+        // widgetModel
+        //     .findWidgetById(wgid)
+        //     .then(function (widget) {
+        //         if (widget) {
+        //             res.json(widget);
+        //         } else {
+        //             res.sendStatus(404);
+        //         }
+        //     }, function (err) {
+        //         console.log(err);
+        //         res.sendStatus(500);
+        //     });
     }
 
     function updateWidget(req, res) {
+
         var widget = req.body;
         var type = widget.widgetType;
         var modified = new Date();
@@ -220,12 +280,35 @@ module.exports = function (app) {
         }
 
         res.sendStatus(200);
+
+        // var newWidget = req.body;
+        // var wid = req.params['wid'];
+        // newWidget.justCreated = false;
+        // newWidget.dateModified = new Date();
+        //
+        // widgetModel.updateWidget(wgid, newWidget)
+        //     .then(function (response) {
+        //         res.sendStatus(200);
+        //     }, function (err) {
+        //         console.log(err);
+        //         res.sendStatus(500);
+        //     });
     }
 
     function deleteWidget(req, res) {
         var index = findIndexById(req.params['wgid']);
         widgets.splice(index, 1);
         res.sendStatus(200);
+
+        // var wgid = req.params['wgid'];
+        // widgetModel
+        //     .removeWidget(wgid)
+        //     .then(function (response) {
+        //         res.sendStatus(200);
+        //     }, function (err) {
+        //         console.log(err);
+        //         res.sendStatus(500);
+        //     })
     }
 
 

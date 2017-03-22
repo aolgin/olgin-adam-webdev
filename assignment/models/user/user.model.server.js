@@ -90,8 +90,7 @@ module.exports = function () {
                 username: user.username,
                 firstName: user.firstName,
                 lastName: user.lastName,
-                email: user.email,
-                dateModified: user.dateModified
+                email: user.email
             },
             function (err, status) {
                 if (err) {
