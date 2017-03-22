@@ -1,5 +1,7 @@
 module.exports = function (model) {
     var mongoose = require("mongoose");
+    var q = require('q');
+    mongoose.Promise = q.Promise;
     var WebsiteSchema = require("./website.schema.server")();
     var WebsiteModel = mongoose.model("WebsiteModel", WebsiteSchema);
 
@@ -20,43 +22,96 @@ module.exports = function (model) {
     }
 
     function findPagesForWebsite(wid) {
-        return WebsiteModel
+        var deferred = q.defer();
+        WebsiteModel
             .findById(wid)
             .populate("pages", "name")
-            .exec();
+            .exec(function (err, results) {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    deferred.resolve(results);
+                }
+            });
+        return deferred.promise;
     }
 
     function findWebsiteByName(name) {
-        return WebsiteModel.findOne({
+        var deferred = q.defer();
+        WebsiteModel.findOne({
             name: name
+        }, function (err, site) {
+            if (err) {
+                deferred.reject(err);
+            } else {
+                deferred.resolve(site);
+            }
         });
+        return deferred.promise;
     }
 
     function findWebsiteById(wid) {
-        return WebsiteModel.findById(wid);
+        var deferred = q.defer();
+        WebsiteModel.findById(wid,
+            function (err, site) {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    deferred.resolve(site);
+                }
+            });
+        return deferred.promise;
     }
 
     function removeWebsite(wid) {
-        return WebsiteModel.remove({_id: wid});
+        var deferred = q.defer();
+        WebsiteModel.remove({_id: wid},
+            function (err, status) {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    deferred.resolve(status);
+                }
+            });
+        return deferred.promise;
     }
 
     function updateWebsite(wid, site) {
-        return WebsiteModel.update({
+        var deferred = q.defer();
+        WebsiteModel.update({
             _id: wid
         },
             {
                 name: site.name,
                 description: site.description,
                 dateModified: site.dateModified
+            }, function (err, status) {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    deferred.resolve(status);
+                }
             }
         );
+        return deferred.promise;
     }
 
     function findWebsitesForUser(userId) {
-        return model.userModel.findWebsitesForUser(userId);
+        var deferred = q.defer();
+        model.userModel.findWebsitesForUser(userId,
+            function (err, results) {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    deferred.resolve(results);
+                }
+            });
+        return deferred.promise;
     }
 
+    // How to implement q in this?
     function createWebsite(userId, website) {
+        // var deferred = q.defer();
         return WebsiteModel
             .create(website)
             .then(function(websiteObj){
@@ -71,5 +126,6 @@ module.exports = function (model) {
                         console.log(error);
                     });
             });
+        // return deferred.promise;
     }
 };

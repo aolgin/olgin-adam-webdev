@@ -1,5 +1,7 @@
 module.exports = function (model) {
     var mongoose = require("mongoose");
+    var q = require('q');
+    mongoose.Promise = q.Promise;
     var PageSchema = require("./page.schema.server")();
     var PageModel  = mongoose.model("PageModel", PageSchema);
 
@@ -20,33 +22,71 @@ module.exports = function (model) {
 
     // TODO get around to doing this
     function findWidgetsForPage(pid) {
-        return PageModel
+        var deferred = q.defer();
+        PageModel
             .findById(pid)
-            .populate("widgets", "name")
-            .exec();
+            .populate("widgets")
+            .exec(
+                function (err, results) {
+                    if (err) {
+                        deferred.reject(err);
+                    } else {
+                        deferred.resolve(results);
+                    }
+                }
+            );
+        return deferred.promise;
     }
 
     function removePage(pid) {
-        return PageModel.remove({_id: pid});
+        var deferred = q.defer();
+        PageModel.remove({_id: pid},
+            function (err, status) {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    deferred.resolve(status);
+                }
+            });
+        return deferred.promise;
     }
 
     function updatePage(pid, page) {
-        return PageModel.update({
+        var deferred = q.defer();
+        PageModel.update({
                 _id: pid
             },
             {
                 name: page.name,
                 description: page.description,
                 dateModified: page.dateModified
+            },
+            function (err, status) {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    deferred.resolve(status);
+                }
             }
         );
+        return deferred.promise;
     }
 
     function findPageById(pid) {
-        return PageModel.findById(pid);
+        var deferred = q.defer();
+        PageModel.findById(pid,
+            function (err, page) {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    deferred.resolve(page);
+                }
+            });
+        return deferred.promise;
     }
 
     function createPage(wid, page) {
+        // var deferred = q.defer();
         return PageModel
             .create(page)
             .then(function(pageObj){
@@ -61,9 +101,19 @@ module.exports = function (model) {
                         console.log(error);
                     });
             });
+        // return deferred.promise;
     }
 
     function findPagesForWebsite(wid) {
-        return model.websiteModel.findPagesForWebsite(wid);
+        var deferred = q.defer();
+        model.websiteModel.findPagesForWebsite(wid,
+            function (err, results) {
+                if (err) {
+                    deferred.reject(err);
+                } else {
+                    deferred.resolve(results);
+                }
+            });
+        return deferred.promise;
     }
 };
