@@ -4,7 +4,10 @@ module.exports = function() {
     var mongojs  = require('mongojs');
 
     mongoose.Promise = require('q').Promise;
-    mongoose.connect('mongodb://localhost/web-app-maker');
+
+    var connectionString = 'mongodb://localhost/web-app-maker';
+    console.log("Connecting to database at " + connectionString);
+    mongoose.connect(connectionString);
     mongojs('web-app-maker');
 
     var userModel = require("./user/user.model.server")();

@@ -1,12 +1,6 @@
 var express = require('express');
 var app = express();
 
-/*
-var requirejs = require('requirejs');
-requirejs.config({
-    baseUrl: __dirname,
-    nodeRequire: require
-});*/
 // var session = require('express-session');
 
 

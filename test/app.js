@@ -15,6 +15,7 @@ module.exports = function(app)
     }
 
     var mongoose = require("mongoose");
+    console.log("Connecting to database at " + connectionString);
     mongoose.connect(connectionString);
 
     var TestSchema = mongoose.Schema({
