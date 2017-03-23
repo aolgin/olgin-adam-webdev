@@ -29,7 +29,7 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-require("./lectures/mongo/movies")(app);
+// require("./lectures/mongo/movies")(app);
 // require("./lectures/postgres/movies/services/actor.service.server")(app);
 
 // configure a public directory to host static content
