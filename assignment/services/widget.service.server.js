@@ -9,13 +9,13 @@ module.exports = function (app) {
     app.get("/api/page/:pid/widget", findWidgetsByPageId);
     app.post("/api/page/:pid/widget", createWidget);
     app.delete("/api/page/:pid/widget", cleanupEmptyWidgets);
+    app.put("/api/page/:pid/widget", reorderWidget);
     app.get("/api/widget/flickr", getFlickrApi);
     app.get("/api/widget/:wgid", findWidgetById);
     app.delete("/api/widget/:wgid", deleteWidget);
     app.put("/api/widget/:wgid", updateWidget);
     app.post("/api/upload", upload.single('myFile'), uploadImage);
     app.delete("/api/upload/:img", deleteImage);
-    app.put("/api/page/:pid/widget", reorderWidget);
 
     var widgets = [
         { "_id": "123", "name": "Gizmodo Heading", "widgetType": "HEADING", "pageId": "321", "size": 2, "text": "GIZMODO", "orderIndex": 0},
@@ -105,10 +105,8 @@ module.exports = function (app) {
         var pid = req.params['pid'];
         var start = req.query['startIndex'];
         var end = req.query['endIndex'];
-
         widgetModel.reorderWidget(pid, start, end)
             .then(function (status) {
-                console.log("Reorder Widget Status: " + String(status));
                 res.sendStatus(200);
             }, function (err) {
                 console.log(err);

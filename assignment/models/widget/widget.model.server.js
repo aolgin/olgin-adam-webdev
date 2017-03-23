@@ -62,6 +62,10 @@ module.exports = function (model) {
         return deferred.promise;
     }
 
+    // Will end up just setting the widget found at the startIndex
+    // to have an orderIndex of the endIndex.
+    // Could cause potential issues with viewing widgets in order since there
+    // is no currently no other form of shifting going on
     function reorderWidget(pid, start, end) {
         var deferred = q.defer();
         WidgetModel.update(

@@ -12,9 +12,17 @@
             "updateWidget": updateWidget,
             "deleteWidget": deleteWidget,
             // "uploadImage": uploadImage,
-            "cleanupEmptyWidgets": cleanupEmptyWidgets
+            "cleanupEmptyWidgets": cleanupEmptyWidgets,
+            "reorderWidget": reorderWidget
         };
         return api;
+
+        function reorderWidget(pid, startIndex, endIndex) {
+            var url = '/api/page/' + String(pid) +
+                '/widget?startIndex=' + String(startIndex) +
+                '&endIndex=' + String(endIndex);
+            return $http.put(url);
+        }
 
         function cleanupEmptyWidgets(pid) {
             return $http.delete("/api/page/" + pid + "/widget");
