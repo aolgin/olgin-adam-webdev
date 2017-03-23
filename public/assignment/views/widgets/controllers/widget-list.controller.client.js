@@ -12,8 +12,9 @@
         vm.widgetOrder = [];
 
         function init() {
+            renderWidgets();
             //TODO: not the best workaround, but will figure something out later
-            cleanupEmptyWidgets();
+            // cleanupEmptyWidgets();
         }
         init();
 
@@ -21,7 +22,6 @@
         vm.trustUrl = trustUrl;
         vm.getTrustedHtml = getTrustedHtml;
         vm.getWidgetTemplateUrl = getWidgetTemplateUrl;
-        vm.updateWidgetOrdering = updateWidgetOrdering;
         vm.cleanupEmptyWidgets = cleanupEmptyWidgets;
 
         function getWidgetTemplateUrl(type) {
@@ -50,20 +50,6 @@
                     renderWidgets();
                 }
             });
-        }
-
-        function updateWidgetOrdering() {
-            var widgets = $('div.ado-widget');
-
-            console.log(widgets);
-            /*var promise = WidgetService.updateWidgetOrdering(vm.pageId, newOrder);
-            promise.then(function(response) {
-                if (response.status == 200) {
-                    vm.updated = "Changes saved!"
-                }
-            }).catch(function (err) {
-                vm.error = "An uncaught error occurred trying to update the widget order: \n" + err.data;
-            });*/
         }
 
         /*

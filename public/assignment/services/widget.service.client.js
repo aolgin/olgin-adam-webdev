@@ -13,7 +13,6 @@
             "deleteWidget": deleteWidget,
             // "uploadImage": uploadImage,
             "cleanupEmptyWidgets": cleanupEmptyWidgets
-            // "updateWidgetOrdering": updateWidgetOrdering
         };
         return api;
 
@@ -52,9 +51,5 @@
         function deleteWidget(widgetId) {
             return $http.delete("/api/widget/" + widgetId);
         }
-
-        /*function updateWidgetOrdering(pid, widgetOrder) {
-            return $http.put("/api/page/" + pid + "/widget", widgetOrder);
-        }*/
     }
 })();

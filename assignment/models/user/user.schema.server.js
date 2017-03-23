@@ -8,6 +8,11 @@ module.exports = function() {
         lastName: String,
         email: String,
         websites: [{type: mongoose.Schema.Types.ObjectId, ref:'WebsiteModel'}]
-    }, {collection: "user", timestamps: true});
+    }, {collection: "user",
+        timestamps: {
+            createdAt: "dateCreated",
+            updatedAt: "dateModified"
+        }
+    });
     return UserSchema;
 };

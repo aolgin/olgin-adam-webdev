@@ -6,7 +6,7 @@ module.exports = function (app) {
     var upload = multer({ dest: __dirname+'/../../public/uploads' });
     var fs = require('fs');
 
-    app.get("/api/page/:pid/widget", findWidgetsByPage);
+    app.get("/api/page/:pid/widget", findWidgetsByPageId);
     app.post("/api/page/:pid/widget", createWidget);
     app.delete("/api/page/:pid/widget", cleanupEmptyWidgets);
     app.get("/api/widget/flickr", getFlickrApi);
@@ -35,26 +35,54 @@ module.exports = function (app) {
 
     // Helper Functions
 
+    // MongoDB widget creation calls
+    //
+    // db.widget.insert({"widgetType": "HEADING", "orderIndex": 0, "justCreated": false, "name": "Sample Heading", "size": 2, "text": "Sample Heading Text", _page: ObjectId("58d3109396d73745b8a3f765")})
+    // db.widget.insert({"widgetType": "IMAGE", "orderIndex": 2, "justCreated": false, "name": "Sample Image", "text": "Sample Image Text", "url": "https://static.pexels.com/photos/7720/night-animal-dog-pet.jpg", "width": "100%", _page: ObjectId("58d3109396d73745b8a3f765")})
+    // db.widget.insert({"widgetType": "HTML", "orderIndex": 1, "justCreated": false, "name": "Sample HTML", "text": "<p>Here is some sample HTML</p>", _page: ObjectId("58d3109396d73745b8a3f765")})
+    // db.page.update({_id: ObjectId("58d3109396d73745b8a3f765")}, {$push: { widgets: {$each: [ObjectId("58d310e1979785c359cb4813"), ObjectId("58d310f5979785c359cb4814"), ObjectId("58d310ff979785c359cb4815")]}}})
+
+    // TODO potentially irrelevant function now. Determine whether to remove
     function findIndexById(wgid) {
-        var index = widgets.findIndex(function(w) {
-            return w._id === wgid;
-        });
-        return index;
+        widgetModel.findIndexById(wgid)
+            .then(function(index) {
+                if (index) {
+                    return index;
+                } else {
+                    return -1;
+                }
+            }, function (err) {
+                console.log(err);
+                return -2;
+            });
     }
 
+    // NOT CURRENTLY IN USE
     function findWidgetByName(name) {
-        var widget = widgets.find(function(w) {
-            // Widget names are not case sensitive
-            return w.name.toUpperCase() === name.toUpperCase();
-        });
-        return widget;
+        widgetModel.findWidgetByName(name)
+            .then(function(widget) {
+                    if (widget) {
+                        return widget;
+                    } else {
+                        return null;
+                    }
+                }, function (err) {
+                    console.log(err);
+                });
     }
 
     function numWidgetsByPage(pid) {
-        var widgetList = widgets.filter(function(w) {
-            return w.pageId === pid;
-        });
-        return widgetList.length;
+        widgetModel.numWidgetsByPage(pid)
+            .then(function(count) {
+                if (count) {
+                    return count;
+                } else {
+                    return -1;
+                }
+            }, function (err) {
+                console.log(err);
+                return -2;
+            });
     }
 
     // Additional Widget Functionality
@@ -81,15 +109,12 @@ module.exports = function (app) {
 
         widgetModel.reorderWidget(pid, start, end)
             .then(function (status) {
-                console.log(status);
-                // res.sendStatus(status);
+                console.log("Reorder Widget Status: " + String(status));
+                res.sendStatus(200);
             }, function (err) {
                 console.log(err);
                 res.sendStatus(500);
             });
-        console.log(result);
-        res.sendStatus(200);
-        // res.send(result);
     }
 
     function getFlickrApi(req, res) {
@@ -110,6 +135,8 @@ module.exports = function (app) {
         });
     }*/
 
+    // TO RETURN TO
+    // TODO: As it currently stands, this is will be broken by the move to a database
     function uploadImage(req, res) {
         var widgetId      = req.body.widgetId;
         var width         = req.body.width;
@@ -141,7 +168,7 @@ module.exports = function (app) {
         res.redirect(callbackUrl);
     }
 
-    // NOT YET IMPLEMENTED
+    // TODO: NOT YET IMPLEMENTED
     function deleteImage(req, res) {
         var filename = req.params['img'];
         var path = "../../public/uploads/" + filename;
@@ -165,50 +192,57 @@ module.exports = function (app) {
         res.sendStatus(200);
     }
 
-    function findWidgetsByPage(req, res) {
+    function findWidgetsByPageId(req, res) {
         var pid = req.params['pid'];
-        var wgs = widgets.filter(function(w) {
-            return w.pageId === pid;
-        });
-        res.json(wgs);
 
-        // var pid = req.params['pid'];
-        //
-        // model.pageModel.findWidgetsForPage(pid)
-        //     .then(function (response) {
-        //         res.json(response.pages);
-        //     }, function (err) {
-        //         console.log(err);
-        //         res.sendStatus(500);
-        //     });
+        model.pageModel.findWidgetsForPage(pid)
+            .then(function (response) {
+                res.json(response.widgets);
+            }, function (err) {
+                console.log(err);
+                res.sendStatus(500);
+            });
     }
 
     function createWidget(req, res) {
-        var pid = req.params['pid'];
-        var wgid = String(new Date().getTime());
-        var created = new Date();
-        var orderIndex = numWidgetsByPage(pid); // Set as the last widget on the page by default
-        var newWidget = {
-            "_id": wgid,
-            "pageId": pid,
-            "name": "",
-            "widgetType": req.query['widgetType'],
-            "orderIndex": orderIndex,
-            "new": true
-        };
-        widgets.push(newWidget);
-        res.send(wgid);
-
         // var pid = req.params['pid'];
+        // var wgid = String(new Date().getTime());
         // var created = new Date();
         // var orderIndex = numWidgetsByPage(pid); // Set as the last widget on the page by default
-        //
         // var newWidget = {
-        //     "widgetType": req.query['widgetType']
+        //     "_id": wgid,
+        //     "pageId": pid,
+        //     "name": "",
+        //     "widgetType": req.query['widgetType'],
         //     "orderIndex": orderIndex,
-        //     "justCreated": true
+        //     "new": true
         // };
-        //
+        // widgets.push(newWidget);
+        // res.send(wgid);
+
+        var pid = req.params['pid'];
+
+        widgetModel.numWidgetsByPage(pid)
+            .then(function (count) {
+                var newWidget = {
+                    "widgetType": req.query['widgetType'],
+                    "orderIndex": count
+                };
+
+                widgetModel.createWidget(pid, newWidget)
+                    .then(function (widget) {
+                        res.json(widget);
+                    }, function (err) {
+                        console.log(err);
+                        res.sendStatus(500);
+                    })
+            }, function (err) {
+                console.log(err);
+                res.sendStatus(500);
+            });
+
+
+
         // widgetModel.createWidget(pid, newWidget)
         //     .then(function (response) {
         //         console.log(response);
@@ -220,95 +254,48 @@ module.exports = function (app) {
     }
 
     function findWidgetById(req, res) {
-        var wgid = req.params['wgid'];
-        var widget = widgets.find(function(w) {
-            return w._id === wgid;
-        });
-        if (widget) {
-            res.json(widget);
-        } else {
-            res.sendStatus(404); // Not Found
-        }
 
-        // var wgid = req.params['wgid'];
-        //
-        // widgetModel
-        //     .findWidgetById(wgid)
-        //     .then(function (widget) {
-        //         if (widget) {
-        //             res.json(widget);
-        //         } else {
-        //             res.sendStatus(404);
-        //         }
-        //     }, function (err) {
-        //         console.log(err);
-        //         res.sendStatus(500);
-        //     });
+        var wgid = req.params['wgid'];
+
+        widgetModel
+            .findWidgetById(wgid)
+            .then(function (widget) {
+                if (widget) {
+                    res.json(widget);
+                } else {
+                    res.sendStatus(404);
+                }
+            }, function (err) {
+                console.log(err);
+                res.sendStatus(500);
+            });
     }
 
     function updateWidget(req, res) {
 
-        var widget = req.body;
-        var type = widget.widgetType;
-        var modified = new Date();
+        var newWidget = req.body;
+        var wgid = req.params['wgid'];
 
-        if (!widget.name) {
-            res.sendStatus(400); // Bad Request
-            return;
-        }
-
-        var index = findIndexById(req.params['wgid']);
-        if (widget.name != widgets[index].name &&
-            findWidgetByName(widget.name)) {
-            res.sendStatus(409); // Conflict
-            return;
-        }
-        widgets[index].name = widget.name;
-        widgets[index].text = widget.text;
-        widgets[index].modified = modified;
-        widgets[index].new = false;
-
-        if (type === 'YOUTUBE' || type === 'IMAGE') {
-            widgets[index].url = widget.url;
-            widgets[index].width = widget.width;
-        } else if (type === 'HEADING') {
-            widgets[index].size = widget.size;
-        } else if (type === 'TEXT') {
-            widgets[index].formatted = widget.formatted;
-            widgets[index].rows = widget.rows;
-            widgets[index].placeholder = widget.placeholder;
-        }
-
-        res.sendStatus(200);
-
-        // var newWidget = req.body;
-        // var wid = req.params['wid'];
-        // newWidget.justCreated = false;
-        // newWidget.dateModified = new Date();
-        //
-        // widgetModel.updateWidget(wgid, newWidget)
-        //     .then(function (response) {
-        //         res.sendStatus(200);
-        //     }, function (err) {
-        //         console.log(err);
-        //         res.sendStatus(500);
-        //     });
+        widgetModel.updateWidget(wgid, newWidget)
+            .then(function (response) {
+                res.sendStatus(200);
+            }, function (err) {
+                console.log(err);
+                res.sendStatus(500);
+            });
     }
 
     function deleteWidget(req, res) {
-        var index = findIndexById(req.params['wgid']);
-        widgets.splice(index, 1);
-        res.sendStatus(200);
 
-        // var wgid = req.params['wgid'];
-        // widgetModel
-        //     .removeWidget(wgid)
-        //     .then(function (response) {
-        //         res.sendStatus(200);
-        //     }, function (err) {
-        //         console.log(err);
-        //         res.sendStatus(500);
-        //     })
+        var wgid = req.params['wgid'];
+        widgetModel
+            .removeWidget(wgid)
+            .then(function (response) {
+                res.sendStatus(200);
+            }, function (err) {
+                console.log(err);
+                res.sendStatus(500);
+            })
     }
 
 

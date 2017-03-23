@@ -13,6 +13,7 @@ module.exports = function (model) {
         findWebsiteById: findWebsiteById,
         findWebsiteByName: findWebsiteByName,
         findPagesForWebsite: findPagesForWebsite,
+        // cascadeDelete: cascadeDelete,
         setModel: setModel
     };
     return api;
@@ -20,6 +21,24 @@ module.exports = function (model) {
     function setModel(_model) {
         model = _model;
     }
+
+    // TODO: For potential future use
+    // function cascadeDelete(wid) {
+    //     var deferred = q.defer();
+    //     // Currently just a pseudo-code implementation
+    //     for (page in pages) {
+    //         var pid = page._id;
+    //         model.pageModel.cascadeDelete(pid)
+    //         model.pageModel.remove(pid);
+    //         WebsiteModel.update({
+    //             _id: wid,
+    //         },
+    //             pages: removePageIdFromArray
+    //         )
+    //     }
+    //     return deferred.promise;
+    //
+    // }
 
     function findPagesForWebsite(wid) {
         var deferred = q.defer();
@@ -111,6 +130,34 @@ module.exports = function (model) {
     // How to implement q in this?
     function createWebsite(userId, website) {
         // var deferred = q.defer();
+        // WebsiteModel
+        //     .create(website,
+        //         function (err, websiteObj) {
+        //             console.log("Created Website");
+        //             if (err) {
+        //                 console.log("Deferred at stage 1");
+        //                 deferred.reject(err);
+        //             } else {
+        //                 console.log("Made it into round 1");
+        //                 model.userModel.findUserById(userId,
+        //                     function (err, userObj) {
+        //                         console.log('Found user');
+        //                         if (err) {
+        //                             console.log("Deferred at stage 2");
+        //                             deferred.reject(err);
+        //                         } else {
+        //                             console.log("Made it into round 2");
+        //                             websiteObj._user = userObj._id;
+        //                             websiteObj.save();
+        //                             userObj.websites.push(websiteObj);
+        //                             deferred.resolve(userObj.save());
+        //                             console.log("Resolved!");
+        //                         }
+        //                     })
+        //             }
+        //         });
+        // return deferred.promise;
+
         return WebsiteModel
             .create(website)
             .then(function(websiteObj){

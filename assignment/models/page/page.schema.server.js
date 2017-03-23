@@ -6,6 +6,11 @@ module.exports = function () {
         name: String,
         description: String,
         widgets: [{type: mongoose.Schema.Types.ObjectId, ref:'WidgetModel'}]
-    }, {collection: "page", timestamps: true});
+    }, {collection: "page",
+        timestamps: {
+            createdAt: "dateCreated",
+            updatedAt: "dateModified"
+        }
+    });
     return PageSchema;
 };

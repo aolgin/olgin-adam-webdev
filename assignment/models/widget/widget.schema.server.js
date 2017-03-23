@@ -2,8 +2,10 @@ module.exports = function () {
     var mongoose = require("mongoose");
     var WidgetSchema = mongoose.Schema({
         _page: {type: mongoose.Schema.Types.ObjectId, ref:"PageModel"},
-        type: {type: String, enum: ["HTML", "HEADING", "LABEL", "TEXT",
-            "LINK", "BUTTON", "IMAGE", "YOUTUBE","DATATABLE", "REPEATER"]},
+        widgetType: {
+            type: String,
+            enum: ["HTML", "HEADING", "LABEL", "TEXT", "LINK", "BUTTON", "IMAGE", "YOUTUBE","DATATABLE", "REPEATER"]
+        },
         _user: {type: mongoose.Schema.Types.ObjectId, ref:"UserModel"},
         _website: {type: mongoose.Schema.Types.ObjectId, ref:"WebsiteModel"},
         name: String,
@@ -19,7 +21,13 @@ module.exports = function () {
         icon: String,
         deletable: Boolean,
         formatted: Boolean,
+        orderIndex: Number,
         justCreated: Boolean
-    }, {collection: "widget", timestamps: true});
+    }, {collection: "widget",
+        timestamps: {
+            createdAt: "dateCreated",
+            updatedAt: "dateModified"
+        }
+    });
     return WidgetSchema;
 };

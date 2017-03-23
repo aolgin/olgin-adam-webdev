@@ -30,6 +30,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 require("./lectures/mongo/movies")(app);
+// require("./lectures/postgres/movies/services/actor.service.server")(app);
 
 // configure a public directory to host static content
 app.use(express.static(__dirname + '/public'));

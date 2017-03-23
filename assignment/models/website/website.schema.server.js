@@ -5,6 +5,11 @@ module.exports = function () {
         name: String,
         description: String,
         pages: [{type: mongoose.Schema.Types.ObjectId, ref:'PageModel'}]
-    }, {collection: "website", timestamps: true});
+    }, {collection: "website",
+        timestamps: {
+            createdAt: "dateCreated",
+            updatedAt: "dateModified"
+        }
+    });
     return WebsiteSchema;
 };
