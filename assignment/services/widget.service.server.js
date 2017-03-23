@@ -15,7 +15,6 @@ module.exports = function (app) {
     app.put("/api/widget/:wgid", updateWidget);
     app.post("/api/upload", upload.single('myFile'), uploadImage);
     app.delete("/api/upload/:img", deleteImage);
-    app.get("/api/widget/flickr", getFlickrApi);
     app.put("/api/page/:pid/widget", reorderWidget);
 
     var widgets = [
@@ -118,7 +117,7 @@ module.exports = function (app) {
     }
 
     function getFlickrApi(req, res) {
-        var key = process.env.FLICKR_API_KEY;
+        var key = process.env.FLICKR_API_KEY || 'e729faccc241a08b58b0a6d507a07aef';
         res.send(key);
     }
 
