@@ -10,16 +10,32 @@
             "findUserById": findUserById,
             "updateUser": updateUser,
             "createUser": createUser,
-            "findUserByUsername": findUserByUsername,
+            // "findUserByUsername": findUserByUsername,
             "deleteUserById": deleteUserById,
-            "updatePassword": updatePassword
+            "updatePassword": updatePassword,
+            "login": login,
+            "logout": logout,
+            "register": register,
+            "loggedin": loggedin
         };
         return api;
 
         // Controller Functions
 
-        function findUserByUsername(username) {
-            return $http.get("/api/user?username=" + username);
+        function logout(user) {
+            return $http.post("/api/logout");
+        }
+
+        function login(user) {
+            return $http.post("/api/login", user);
+        }
+
+        function register(user) {
+            return $http.post("/api/register", user);
+        }
+
+        function loggedin(user) {
+            return $http.get('/api/username?=' + username);
         }
 
         function deleteUserById(userId) {

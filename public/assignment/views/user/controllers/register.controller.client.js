@@ -3,7 +3,7 @@
         .module("WebAppMaker")
         .controller("registerController", registerController);
 
-    function registerController(UserService, $location) {
+    function registerController(UserService, $location, $rootScope) {
         var vm = this; // vm as in view-model
         vm.register = register;
 
@@ -14,18 +14,34 @@
                 return;
             }
 
-            var promise = UserService.createUser(newUser);
-            promise.then(function (response) {
-                var user = response.data;
-                if (user) { $location.url('/profile/' + user._id); }
-            }).catch(function (err) {
-                var status = err.status;
-                if (status == 409) {
-                    vm.error = "User with that username already exists: " + newUser.username;
-                } else {
-                    vm.error = "An uncaught error occurred registering your user: \n" + err.data;
-                }
-            });
+            UserService.register(newUser)
+                .then(
+                    function(response) {
+                        var user = response.data;
+                        $rootScope.currentUser = user;
+                        $location.url("/profile/" + user._id);
+                    }
+                ).catch(function (err) {
+                    var status = err.status;
+                    if (status == 409) {
+                        vm.error = "User with that username already exists: " + newUser.username;
+                    } else {
+                        vm.error = "An uncaught error occurred registering your user: \n" + err.data;
+                    }
+                });
+
+            // var promise = UserService.createUser(newUser);
+            // promise.then(function (response) {
+            //     var user = response.data;
+            //     if (user) { $location.url('/profile/' + user._id); }
+            // }).catch(function (err) {
+            //     var status = err.status;
+            //     if (status == 409) {
+            //         vm.error = "User with that username already exists: " + newUser.username;
+            //     } else {
+            //         vm.error = "An uncaught error occurred registering your user: \n" + err.data;
+            //     }
+            // });
         }
     }
 })();

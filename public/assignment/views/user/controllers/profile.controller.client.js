@@ -3,7 +3,7 @@
         .module("WebAppMaker")
         .controller("profileController", profileController);
 
-    function profileController($routeParams, $location, UserService) {
+    function profileController($routeParams, $location, UserService, $rootScope) {
         var vm = this;
         vm.userId = $routeParams['uid'];
 
@@ -13,19 +13,21 @@
                 vm.user = response.data;
             });
         }
+
         init();
 
         vm.update = update;
         vm.unregister = unregister;
+        vm.logout = logout;
 
-        function update (newUser) {
+        function update(newUser) {
             var promise = UserService.updateUser(vm.userId, newUser);
             promise.then(function (response) {
                 if (response.status == 200) {
                     vm.error = null;
                     vm.message = "Successfully updated user information!";
                 }
-            }).catch(function(err) {
+            }).catch(function (err) {
                 vm.message = null;
                 var status = err.status;
                 if (status == 409) {
@@ -48,6 +50,17 @@
                     vm.error = "An uncaught error occurred deleting your user: \n" + err.data;
                 });
             }
+        }
+
+        function logout() {
+            UserService
+                .logout()
+                .then(
+                    function (response) {
+                        $rootScope.currentUser = null;
+                        $location.url("/");
+                    }
+                );
         }
     }
 })();
