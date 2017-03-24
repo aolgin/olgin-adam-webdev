@@ -9,10 +9,11 @@ var cookieParser  = require('cookie-parser');
 var session       = require('express-session');
 
 app.use(session({
-    secret: 'this is the secret',
+    secret: 'this is the secret', // should ultimately store this in an environment variable, process.env.SESSION_SECRET
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true // if dne, create a new one (rather than use existing)
 }));
+// The order that this is done is important
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -25,6 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // require("./lectures/mongo/movies")(app);
 // require("./lectures/postgres/movies/services/actor.service.server")(app);
+// require("./lectures/passportjs/services/user.service.server")(app);
 
 // configure a public directory to host static content
 app.use(express.static(__dirname + '/public'));

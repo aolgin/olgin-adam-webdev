@@ -24,29 +24,11 @@ module.exports = function (model) {
     }
 
     function findWidgetByName(name) {
-        var deferred = q.defer();
-        WidgetModel.find({name: name},
-            function (err, widget) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(widget);
-                }
-            });
-        return deferred.promise;
+        return WidgetModel.findOne({name: name});
     }
 
     function numWidgetsByPage(pid) {
-        var deferred = q.defer();
-        WidgetModel.find({_page: pid},
-            function (err, results) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(results.length);
-                }
-            });
-        return deferred.promise;
+        return WidgetModel.find({_page: pid}).count();
     }
 
     function findIndexById(wgid) {
@@ -67,87 +49,42 @@ module.exports = function (model) {
     // Could cause potential issues with viewing widgets in order since there
     // is no currently no other form of shifting going on
     function reorderWidget(pid, start, end) {
-        var deferred = q.defer();
-        WidgetModel.update(
+        return WidgetModel.update(
             {
                 _page: pid,
                 orderIndex: start
-            },
-            {
-                orderIndex: end
-            },
-            function (err, status) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(status);
-                }
-            }
+            }, { orderIndex: end }
         );
-        return deferred.promise;
     }
 
     function findWidgetsForPage(pid) {
-        console.log("Called!");
-        var deferred = q.defer();
-        model.pageModel
+        return model.pageModel
             .findById(pid)
-            .populate("widgets", { sort: { 'orderIndex': 1 }}) //  sort in ascending order
-            .exec(
-                function (err, results) {
-                    if (err) {
-                        deferred.reject(err);
-                    } else {
-                        deferred.resolve(results);
-                    }
-                }
-            );
-        return deferred.promise;
+            .populate("widgets")
+            .exec();
     }
 
     function removeWidget(wgid) {
-        var deferred = q.defer();
-        WidgetModel.remove({_id: wgid},
-            function (err, status) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(status);
-                }
-            });
-        return deferred.promise;
+        return WidgetModel.remove({ _id: wgid });
     }
 
     // TODO needs some reworking
     // in this stage, this may overwrite may attributes
     function updateWidget(wgid, widget) {
-        var deferred = q.defer();
         // A rather ugly approach, but I'm unsure how else to approach this
         // at the moment. Will return to later.
         switch (widget.widgetType) {
             case "HEADING":
-                WidgetModel.update({
-                        _id: wgid
-                    },
+                return WidgetModel.update({ _id: wgid },
                     {
                         name: widget.name,
                         text: widget.text,
                         size: widget.size,
                         justCreated: false
-                    },
-                    function (err, status) {
-                        if (err) {
-                            deferred.reject(err);
-                        } else {
-                            deferred.resolve(status);
-                        }
                     }
                 );
-                break;
             case "TEXT":
-                WidgetModel.update({
-                        _id: wgid
-                    },
+                return WidgetModel.update({ _id: wgid },
                     {
                         name: widget.name,
                         text: widget.text,
@@ -155,89 +92,41 @@ module.exports = function (model) {
                         placeholder: widget.placeholder,
                         formatted: widget.formatted,
                         justCreated: false
-                    },
-                    function (err, status) {
-                        if (err) {
-                            deferred.reject(err);
-                        } else {
-                            deferred.resolve(status);
-                        }
                     }
                 );
-                break;
             case "HTML":
-                WidgetModel.update({
-                        _id: wgid
-                    },
+                return WidgetModel.update({ _id: wgid },
                     {
                         name: widget.name,
                         text: widget.text,
                         justCreated: false
-                    },
-                    function (err, status) {
-                        if (err) {
-                            deferred.reject(err);
-                        } else {
-                            deferred.resolve(status);
-                        }
                     }
                 );
-                break;
             case "IMAGE":
-                WidgetModel.update({
-                        _id: wgid
-                    },
+                return WidgetModel.update({ _id: wgid },
                     {
                         name: widget.name,
                         text: widget.text,
                         url: widget.url,
                         width: widget.width,
                         justCreated: false
-                    },
-                    function (err, status) {
-                        if (err) {
-                            deferred.reject(err);
-                        } else {
-                            deferred.resolve(status);
-                        }
                     }
                 );
-                break;
             case "YOUTUBE":
-                WidgetModel.update({
-                        _id: wgid
-                    },
+                return WidgetModel.update({ _id: wgid },
                     {
                         name: widget.name,
                         text: widget.text,
                         url: widget.url,
                         width: widget.width,
                         justCreated: false
-                    },
-                    function (err, status) {
-                        if (err) {
-                            deferred.reject(err);
-                        } else {
-                            deferred.resolve(status);
-                        }
                     }
                 );
-                break;
         }
-        return deferred.promise;
     }
 
     function findWidgetById(wgid) {
-        var deferred = q.defer();
-        WidgetModel.findById(wgid,
-            function (err, widget) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(widget);
-                }
-            });
-        return deferred.promise;
+        return WidgetModel.findById(wgid);
     }
 
     function createWidget(pid, widget) {

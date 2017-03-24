@@ -22,70 +22,30 @@ module.exports = function (model) {
 
     // TODO get around to doing this
     function findWidgetsForPage(pid) {
-        var deferred = q.defer();
-        PageModel
+        return PageModel
             .findById(pid)
             .populate("widgets")
-            .exec(
-                function (err, results) {
-                    if (err) {
-                        deferred.reject(err);
-                    } else {
-                        deferred.resolve(results);
-                    }
-                }
-            );
-        return deferred.promise;
+            .exec();
     }
 
     function removePage(pid) {
-        var deferred = q.defer();
-        PageModel.remove({_id: pid},
-            function (err, status) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(status);
-                }
-            });
-        return deferred.promise;
+        return PageModel.remove({ _id: pid });
     }
 
     function updatePage(pid, page) {
-        var deferred = q.defer();
-        PageModel.update({
-                _id: pid
-            },
+        return PageModel.update({ _id: pid },
             {
                 name: page.name,
                 description: page.description
-            },
-            function (err, status) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(status);
-                }
             }
         );
-        return deferred.promise;
     }
 
     function findPageById(pid) {
-        var deferred = q.defer();
-        PageModel.findById(pid,
-            function (err, page) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(page);
-                }
-            });
-        return deferred.promise;
+        return PageModel.findById(pid);
     }
 
     function createPage(wid, page) {
-        // var deferred = q.defer();
         return PageModel
             .create(page)
             .then(function(pageObj){
@@ -100,19 +60,9 @@ module.exports = function (model) {
                         console.log(error);
                     });
             });
-        // return deferred.promise;
     }
 
     function findPagesForWebsite(wid) {
-        var deferred = q.defer();
-        model.websiteModel.findPagesForWebsite(wid,
-            function (err, results) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(results);
-                }
-            });
-        return deferred.promise;
+        return model.websiteModel.findPagesForWebsite(wid);
     }
 };

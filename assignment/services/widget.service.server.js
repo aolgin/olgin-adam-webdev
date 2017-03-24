@@ -5,6 +5,7 @@ module.exports = function (app) {
     var multer = require('multer');
     var upload = multer({ dest: __dirname+'/../../public/uploads' });
     var fs = require('fs');
+    var _ = require('underscore');
 
     app.get("/api/page/:pid/widget", findWidgetsByPageId);
     app.post("/api/page/:pid/widget", createWidget);
@@ -194,7 +195,8 @@ module.exports = function (app) {
 
         model.pageModel.findWidgetsForPage(pid)
             .then(function (response) {
-                res.json(response.widgets);
+                var sortedByOrder = _.sortBy(response.widgets, 'orderIndex');
+                res.json(sortedByOrder);
             }, function (err) {
                 console.log(err);
                 res.sendStatus(500);
@@ -220,10 +222,10 @@ module.exports = function (app) {
         var pid = req.params['pid'];
 
         widgetModel.numWidgetsByPage(pid)
-            .then(function (count) {
+            .then(function (results) {
                 var newWidget = {
                     "widgetType": req.query['widgetType'],
-                    "orderIndex": count
+                    "orderIndex": results
                 };
 
                 widgetModel.createWidget(pid, newWidget)

@@ -23,125 +23,52 @@ module.exports = function () {
     }
 
     function findWebsitesForUser(userId) {
-        var deferred = q.defer();
-        UserModel
+        return UserModel
             .findById(userId)
             .populate("websites", "name dateModified _user")
-            .exec(function (err, results) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(results);
-                }
-            });
-        return deferred.promise;
+            .exec();
     }
 
     function removeUser(userId) {
-        var deferred = q.defer();
-        UserModel.remove(
-            {_id: userId},
-            function (err, status) {
-                if (err) {
-                    deferred.reject();
-                } else {
-                    deferred.resolve(status);
-                }
-        });
-        return deferred.promise;
+        return UserModel.remove({_id: userId});
     }
 
     function findUserByCredentials(username, password) {
-        var deferred = q.defer();
-        UserModel.findOne({
+        return UserModel.findOne({
             username: username,
             password: password
-        }, function (err, user) {
-            if (err) {
-                deferred.reject(err);
-            } else {
-                deferred.resolve(user);
-            }
         });
-        return deferred.promise;
     }
 
 
     function findUserByUsername(username) {
-        var deferred = q.defer();
-        UserModel.findOne({
-            username: username
-        }, function (err, user) {
-            if (err) {
-                deferred.reject(err);
-            } else {
-                deferred.resolve(user);
-            }
-        });
-        return deferred.promise;
+        return UserModel.findOne({ username: username });
     }
 
     function updateUser(userId, user) {
-        var deferred = q.defer();
-        UserModel.update({
-            _id: userId
-        },
+        return UserModel.update({ _id: userId },
             {
                 username: user.username,
                 firstName: user.firstName,
                 lastName: user.lastName,
                 email: user.email
-            },
-            function (err, status) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(status);
-                }
             }
         );
-        return deferred.promise;
     }
 
     function updatePassword(userId, password) {
-        var deferred = q.defer();
-        UserModel.update({
-            _id: userId
-        },
+        return UserModel.update({ _id: userId },
             {
                 password: password
-            }, function (err, status) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(status);
-                }
             }
         );
-        return deferred.promise;
     }
 
     function findUserById(userId) {
-        var deferred = q.defer();
-        UserModel.findById(userId, function (err, user) {
-            if (err) {
-                deferred.reject(err);
-            } else {
-                deferred.resolve(user);
-            }
-        });
-        return deferred.promise;
+        return UserModel.findById(userId);
     }
 
     function createUser(user) {
-        var deferred = q.defer();
-        UserModel.create(user, function (err, user) {
-            if (err) {
-                deferred.reject(err);
-            } else {
-                deferred.resolve(user);
-            }
-        });
-        return deferred.promise;
+        return UserModel.create(user);
     }
 };

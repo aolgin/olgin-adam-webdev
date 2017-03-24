@@ -41,123 +41,38 @@ module.exports = function (model) {
     // }
 
     function findPagesForWebsite(wid) {
-        var deferred = q.defer();
-        WebsiteModel
+        return WebsiteModel
             .findById(wid)
             .populate("pages", "name")
-            .exec(function (err, results) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(results);
-                }
-            });
-        return deferred.promise;
+            .exec();
     }
 
     function findWebsiteByName(name) {
-        var deferred = q.defer();
-        WebsiteModel.findOne({
-            name: name
-        }, function (err, site) {
-            if (err) {
-                deferred.reject(err);
-            } else {
-                deferred.resolve(site);
-            }
-        });
-        return deferred.promise;
+        return WebsiteModel.findOne({ name: name });
     }
 
     function findWebsiteById(wid) {
-        var deferred = q.defer();
-        WebsiteModel.findById(wid,
-            function (err, site) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(site);
-                }
-            });
-        return deferred.promise;
+        return WebsiteModel.findById(wid);
     }
 
     function removeWebsite(wid) {
-        var deferred = q.defer();
-        WebsiteModel.remove({_id: wid},
-            function (err, status) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(status);
-                }
-            });
-        return deferred.promise;
+        return WebsiteModel.remove({_id: wid});
     }
 
     function updateWebsite(wid, site) {
-        var deferred = q.defer();
-        WebsiteModel.update({
-            _id: wid
-        },
+        return WebsiteModel.update({ _id: wid },
             {
                 name: site.name,
                 description: site.description
-            }, function (err, status) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(status);
-                }
             }
         );
-        return deferred.promise;
     }
 
     function findWebsitesForUser(userId) {
-        var deferred = q.defer();
-        model.userModel.findWebsitesForUser(userId,
-            function (err, results) {
-                if (err) {
-                    deferred.reject(err);
-                } else {
-                    deferred.resolve(results);
-                }
-            });
-        return deferred.promise;
+        return model.userModel.findWebsitesForUser(userId);
     }
 
-    // How to implement q in this?
     function createWebsite(userId, website) {
-        // var deferred = q.defer();
-        // WebsiteModel
-        //     .create(website,
-        //         function (err, websiteObj) {
-        //             console.log("Created Website");
-        //             if (err) {
-        //                 console.log("Deferred at stage 1");
-        //                 deferred.reject(err);
-        //             } else {
-        //                 console.log("Made it into round 1");
-        //                 model.userModel.findUserById(userId,
-        //                     function (err, userObj) {
-        //                         console.log('Found user');
-        //                         if (err) {
-        //                             console.log("Deferred at stage 2");
-        //                             deferred.reject(err);
-        //                         } else {
-        //                             console.log("Made it into round 2");
-        //                             websiteObj._user = userObj._id;
-        //                             websiteObj.save();
-        //                             userObj.websites.push(websiteObj);
-        //                             deferred.resolve(userObj.save());
-        //                             console.log("Resolved!");
-        //                         }
-        //                     })
-        //             }
-        //         });
-        // return deferred.promise;
-
         return WebsiteModel
             .create(website)
             .then(function(websiteObj){
@@ -172,6 +87,5 @@ module.exports = function (model) {
                         console.log(error);
                     });
             });
-        // return deferred.promise;
     }
 };
