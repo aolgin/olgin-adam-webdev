@@ -116,7 +116,7 @@ module.exports = function (app) {
     }
 
     function getFlickrApi(req, res) {
-        var key = process.env.FLICKR_API_KEY || 'e729faccc241a08b58b0a6d507a07aef';
+        var key = process.env.FLICKR_API_KEY;
         res.send(key);
     }
 

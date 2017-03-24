@@ -4,6 +4,7 @@ module.exports = function (model) {
     mongoose.Promise = q.Promise;
     var WidgetSchema = require("./widget.schema.server")();
     var WidgetModel  = mongoose.model("WidgetModel", WidgetSchema);
+    var _ = require('underscore');
 
     var api = {
         createWidget: createWidget,
@@ -63,6 +64,18 @@ module.exports = function (model) {
             .populate("widgets")
             .exec();
     }
+
+    // function updateAllOrdering(pid) {
+    //     var wlist = findWidgetsForPage(pid);
+    //     var sorted = _.sortBy(wlist, 'orderIndex');
+    //     for (var i = 0; i < sorted.length; i++) {
+    //         var wgid = sorted[i]._id;
+    //         WidgetModel.update({_id: wgid},
+    //             {orderIndex: i}
+    //         );
+    //     }
+    //     return true;
+    // }
 
     function removeWidget(wgid) {
         return WidgetModel.remove({ _id: wgid });

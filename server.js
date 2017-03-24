@@ -7,9 +7,10 @@ var app = express();
 var passport      = require('passport');
 var cookieParser  = require('cookie-parser');
 var session       = require('express-session');
+var secret = process.env.SESSION_SECRET || 'this is a secret';
 
 app.use(session({
-    secret: 'this is the secret', // should ultimately store this in an environment variable, process.env.SESSION_SECRET
+    secret: secret,
     resave: true,
     saveUninitialized: true // if dne, create a new one (rather than use existing)
 }));
