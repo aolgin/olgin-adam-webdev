@@ -15,30 +15,13 @@
         </div>
         <div class="navbar-header">
             <a class="navbar-brand">
-                Widgets
+                Web App Maker - {{model.page.name}}
             </a>
         </div>
     </div>
 </nav>
 
 <div class="container-fluid">
-    <!--
-        May end up implementing this later. The intent is to save the order of the widgets
-        as a whole, rather than piecemeal as it changes. Not fully implemented or working yet.
-        -->
-    <!--<div class="alert alert-info"> &lt;!&ndash; ng-show="model.message" &ndash;&gt;
-        <p>Looks like you've switched up the widget order. Would you like to save your new configuration?</p>
-        <a class="btn btn-primary btn-block"
-           ng-click="model.updateWidgetOrdering()">
-            Save Ordering
-        </a>
-    </div>-->
-    <div ng-show="model.updated" class="alert alert-success">
-        <p>{{model.updated}}</p>
-    </div>
-    <div ng-show="model.error" class="alert alert-danger">
-        <p>{{model.error}}</p>
-    </div>
 
     <div ado-sortable="">
         <div class="ado-widget-list" ng-repeat="widget in model.widgets">

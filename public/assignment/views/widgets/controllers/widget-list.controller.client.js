@@ -3,15 +3,17 @@
         .module("WebAppMaker")
         .controller("WidgetListController", WidgetListController);
 
-    function WidgetListController($routeParams, $sce, WidgetService) {
+    function WidgetListController($routeParams, $sce, WidgetService, PageService) {
         var vm = this;
         vm.userId = $routeParams['uid'];
         vm.websiteId = $routeParams['wid'];
         vm.pageId = $routeParams['pid'];
 
-        vm.widgetOrder = [];
-
         function init() {
+            var promise = PageService.findPageById(vm.pageId);
+            promise.then(function (response) {
+               vm.page = response.data;
+            });
             renderWidgets();
             //TODO: not the best workaround, but will figure something out later
             // cleanupEmptyWidgets();

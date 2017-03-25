@@ -12,7 +12,7 @@
                 deferred.resolve();
             } else {
                 deferred.reject();
-                $location.url('/');
+                $location.url('/error');
             }
         });
         return deferred.promise;
@@ -23,6 +23,9 @@
         $httpProvider.defaults.headers.put['Content-Type'] = 'application/json;charset=utf-8';
 
         $routeProvider
+            .when("/error", {
+                templateUrl: 'views/user/templates/unauthorized.view.client.html'
+            })
             .when("/login",{
                 templateUrl: 'views/user/templates/login.view.client.html',
                 controller: 'loginController',
