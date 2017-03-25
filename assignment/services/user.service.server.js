@@ -6,6 +6,7 @@ module.exports = function(app, model) {
     var LocalStrategy = require('passport-local').Strategy;
     passport.serializeUser(serializeUser);
     passport.deserializeUser(deserializeUser);
+    var FacebookStrategy = require('passport-facebook').Strategy;
 
 
     app.get("/api/user", findUserByCredentials);
@@ -23,6 +24,12 @@ module.exports = function(app, model) {
     // app.get   ('/api/user',     auth, findAllUsers);
     app.put   ('/api/user/:id', auth, updateUser);
     app.delete('/api/user/:id', auth, deleteUserById);
+    app.get ('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
+    app.get('/auth/facebook/callback',
+        passport.authenticate('facebook', {
+            successRedirect: '/#/profile', // how to get user id here?
+            failureRedirect: '/#/login'
+        }));
 
     function authorized (req, res, next) {
         if (!req.isAuthenticated()) {

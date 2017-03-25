@@ -18,12 +18,17 @@
     <form>
         <div class="form-group">
             <input ng-model="user.username"
+                   autocorrect="off"
+                   autocapitalize="off"
                    type="text"
+                   required="true"
                    class="form-control"
                    placeholder="username"/>
         </div>
         <div class="form-group">
             <input ng-model="user.password"
+                   autocorrect="off"
+                   autocapitalize="off"
                    type="password"
                    class="form-control"
                    placeholder="password"/>
@@ -33,6 +38,10 @@
     <a class="btn btn-primary btn-block"
         ng-click="model.login(user)">
         Login
+    </a>
+    <a href="/auth/facebook" class="btn btn-fb-blue btn-block">
+        <span class="fa fa-facebook"></span>
+        Facebook
     </a>
 
     <a class="btn btn-success btn-block" href="#/register">

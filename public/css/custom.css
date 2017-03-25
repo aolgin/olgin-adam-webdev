@@ -53,6 +53,12 @@ body {
     border-color: #008080;
 }
 
+.btn-fb-blue {
+    color: #fff;
+    background-color: #3b5998;
+    border-color: #2e6da4;
+}
+
 .ado-youtube-widget {
     position: relative;
     padding-bottom: 56.25%; /* 16:9 */

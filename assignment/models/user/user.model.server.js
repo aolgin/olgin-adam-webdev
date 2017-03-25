@@ -14,12 +14,17 @@ module.exports = function () {
         updateUser: updateUser,
         removeUser: removeUser,
         updatePassword: updatePassword,
+        findUserByFacebookId: findUserByFacebookId,
         setModel: setModel
     };
     return api;
 
     function setModel(_model) {
         model = _model;
+    }
+
+    function findUserByFacebookId(facebookId) {
+        return UserModel.findOne({'facebook.id': facebookId});
     }
 
     function findWebsitesForUser(userId) {
