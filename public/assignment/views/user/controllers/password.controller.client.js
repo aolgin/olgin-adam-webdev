@@ -12,7 +12,10 @@
         init();
 
         function updatePassword(passList) {
-            if (passList.newPassword != passList.confirmPassword) {
+            if (!passList.oldPassword || !passList.newPassword || !passList.confirmPassword) {
+                vm.error = 'All fields required!';
+                return;
+            } else if (passList.newPassword != passList.confirmPassword) {
                 vm.error = "Passwords do not match!";
                 return;
             }

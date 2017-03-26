@@ -39,6 +39,10 @@
         }
 
         function updatePage(newPage) {
+            if (!newPage || !newPage.name) {
+                vm.error = "The 'name' field is required for submission";
+                return;
+            }
             var promise = PageService.updatePage(vm.pageId, newPage);
             promise.then(function(response) {
                 if (response.status == 200) {

@@ -9,7 +9,6 @@ module.exports = function (app) {
 
     app.get("/api/page/:pid/widget", findWidgetsByPageId);
     app.post("/api/page/:pid/widget", createWidget);
-    app.delete("/api/page/:pid/widget", cleanupEmptyWidgets);
     app.put("/api/page/:pid/widget", reorderWidget);
     app.get("/api/widget/flickr", getFlickrApi);
     app.get("/api/widget/:wgid", findWidgetById);
@@ -174,22 +173,6 @@ module.exports = function (app) {
         res.sendStatus(200);
     }
 
-    //TODO: Need to stop doing this and just make widgets properly
-    // However, this will take care of cases where the user goes to make a new widget
-    // and then hits 'back'
-    function cleanupEmptyWidgets(req, res) {
-        var pid = req.params['pid'];
-        var wgs = widgets.filter(function(w) {
-            return w.pageId === pid &&
-                w.newWidget === true;
-        });
-        for (var w in wgs) {
-            var index = findIndexById(w._id);
-            widgets.splice(index, 1);
-        }
-        res.sendStatus(200);
-    }
-
     function findWidgetsByPageId(req, res) {
         var pid = req.params['pid'];
 
@@ -204,33 +187,17 @@ module.exports = function (app) {
     }
 
     function createWidget(req, res) {
-        // var pid = req.params['pid'];
-        // var wgid = String(new Date().getTime());
-        // var created = new Date();
-        // var orderIndex = numWidgetsByPage(pid); // Set as the last widget on the page by default
-        // var newWidget = {
-        //     "_id": wgid,
-        //     "pageId": pid,
-        //     "name": "",
-        //     "widgetType": req.query['widgetType'],
-        //     "orderIndex": orderIndex,
-        //     "new": true
-        // };
-        // widgets.push(newWidget);
-        // res.send(wgid);
 
         var pid = req.params['pid'];
+        var widget = req.body;
 
         widgetModel.numWidgetsByPage(pid)
             .then(function (results) {
-                var newWidget = {
-                    "widgetType": req.query['widgetType'],
-                    "orderIndex": results
-                };
+                widget.orderIndex = results;
 
-                widgetModel.createWidget(pid, newWidget)
-                    .then(function (widget) {
-                        res.json(widget);
+                widgetModel.createWidget(pid, widget)
+                    .then(function (response) {
+                        res.sendStatus(200);
                     }, function (err) {
                         console.log(err);
                         res.sendStatus(500);
@@ -239,17 +206,6 @@ module.exports = function (app) {
                 console.log(err);
                 res.sendStatus(500);
             });
-
-
-
-        // widgetModel.createWidget(pid, newWidget)
-        //     .then(function (response) {
-        //         console.log(response);
-        //         res.send(response);
-        //     }, function (err) {
-        //         console.log(err);
-        //         res.sendStatus(500);
-        //     });
     }
 
     function findWidgetById(req, res) {

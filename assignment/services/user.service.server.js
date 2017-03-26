@@ -11,9 +11,6 @@ module.exports = function(app, model) {
 
     app.get("/api/user", findUserByCredentials);
     app.get("/api/user/:uid", findUserById);
-    // app.put("/api/user/:uid", updateUser);
-    // app.post("/api/user", createUser);
-    // app.delete("/api/user/:uid", deleteUserById);
 
     // Authentication and passport related
     app.post  ('/api/login', passport.authenticate('local'), login);
@@ -30,6 +27,29 @@ module.exports = function(app, model) {
             successRedirect: '/#/profile', // how to get user id here?
             failureRedirect: '/#/login'
         }));
+
+    var facebookConfig = {
+        clientID     : process.env.FACEBOOK_CLIENT_ID,
+        clientSecret : process.env.FACEBOOK_CLIENT_SECRET,
+        callbackURL  : process.env.FACEBOOK_CALLBACK_URL
+    };
+    passport.use(new FacebookStrategy(facebookConfig, facebookStrategy));
+    function facebookStrategy(token, refreshToken, profile, done) {
+        userModel
+            .findUserByFacebookId(profile.id)
+            .then(function (user) {
+                if (!user) {
+                    // TODO
+                    // Store them as a new user
+                    // Then log them in
+                    var newUser = {};
+                    return done(null, newUser);
+                } else {
+                    return done(null, user);
+                    // log them in
+                }
+            })
+    }
 
     function authorized (req, res, next) {
         if (!req.isAuthenticated()) {

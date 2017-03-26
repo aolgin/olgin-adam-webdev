@@ -9,7 +9,10 @@
 
         function register(newUser) {
             // This is done client-side, so no need to put it within the promise execution
-            if (newUser.password != newUser.confirmPass) {
+            if (!newUser || !newUser.username || !newUser.password || !newUser.confirmPass) {
+                vm.error = 'Required fields: Username, Password, Confirm Password';
+                return;
+            } else if (newUser.password != newUser.confirmPass) {
                 vm.error = "Passwords do not match!";
                 return;
             }

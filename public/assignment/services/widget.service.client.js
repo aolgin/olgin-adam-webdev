@@ -12,7 +12,6 @@
             "updateWidget": updateWidget,
             "deleteWidget": deleteWidget,
             // "uploadImage": uploadImage,
-            "cleanupEmptyWidgets": cleanupEmptyWidgets,
             "reorderWidget": reorderWidget
         };
         return api;
@@ -22,10 +21,6 @@
                 '/widget?startIndex=' + String(startIndex) +
                 '&endIndex=' + String(endIndex);
             return $http.put(url);
-        }
-
-        function cleanupEmptyWidgets(pid) {
-            return $http.delete("/api/page/" + pid + "/widget");
         }
 
         // NOT IN USE
@@ -40,8 +35,8 @@
         //     // return $http.post("/api/upload?wgid=" + wgid, file)
         // }
 
-        function createWidget(pageId, type) {
-            return $http.post("/api/page/" + pageId + "/widget?widgetType=" + type);
+        function createWidget(pageId, widget) {
+            return $http.post("/api/page/" + pageId + "/widget", widget);
         }
 
         function findWidgetsByPageId(pageId) {

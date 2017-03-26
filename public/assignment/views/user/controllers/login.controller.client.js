@@ -11,6 +11,10 @@
         init();
 
         function login(user) {
+            if (!user.username || !user.password) {
+                vm.error = 'All fields required!';
+                return;
+            }
             var promise = UserService.login(user)
             promise.then(function(response) {
                     var user = response.data;

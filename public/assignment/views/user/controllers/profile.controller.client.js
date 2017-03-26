@@ -21,6 +21,10 @@
         vm.logout = logout;
 
         function update(newUser) {
+            if (!newUser || !newUser.username || !newUser.email) {
+                vm.error = "Required Fields: Username, Email";
+                return;
+            }
             var promise = UserService.updateUser(vm.userId, newUser);
             promise.then(function (response) {
                 if (response.status == 200) {

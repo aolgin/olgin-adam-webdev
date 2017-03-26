@@ -39,6 +39,10 @@
         }
 
         function updateWebsite(newSite) {
+            if (!newSite || !newSite.name) {
+                vm.error = "The 'name' field is required for submission";
+                return;
+            }
             var promise = WebsiteService.updateWebsite(vm.websiteId, newSite);
             promise.then(function(response) {
                 if (response.status == 200) {

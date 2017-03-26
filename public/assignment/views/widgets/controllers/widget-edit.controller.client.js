@@ -10,11 +10,13 @@
         vm.pageId = $routeParams['pid'];
         vm.widgetId = $routeParams['wgid'];
         vm.imageEditorType = "url";
+        vm.form = 'edit';
 
         function init() {
             var promise = WidgetService.findWidgetById(vm.widgetId);
             promise.then(function(response) {
                vm.widget = response.data;
+               vm.type = vm.widget.widgetType;
             });
             vm.showPhotos = false;
             vm.flickrPageNum = 1;
@@ -136,6 +138,10 @@
         }
 
         function updateWidget(newWidget) {
+            if (!newWidget || !newWidget.name) {
+                vm.error = "The 'name' field is required for submission";
+                return;
+            }
             var promise = WidgetService.updateWidget(vm.widgetId, newWidget);
             promise.then(function(response) {
                 if (response.status == 200) {
@@ -145,8 +151,6 @@
                 var status = err.status;
                 if (status == 409) {
                     vm.error = "A widgets exists with that name already! Please use a different name";
-                } else if (status == 400) {
-                    vm.error = "Name field is required";
                 } else {
                     vm.error = "An error occurred trying to update the widget: \n" + err.data;
                 }

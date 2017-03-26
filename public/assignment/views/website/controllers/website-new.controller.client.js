@@ -19,6 +19,10 @@
         vm.createWebsite = createWebsite;
 
         function createWebsite(website) {
+            if (!website || !website.name) {
+                vm.error = "The 'name' field is required for submission";
+                return;
+            }
             var promise = WebsiteService.createWebsite(website, vm.userId);
             promise.then(function(response) {
                 if (response.status == 200) {

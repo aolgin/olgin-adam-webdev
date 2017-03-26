@@ -13,7 +13,8 @@
         </div>
         <div class="navbar-header">
             <a class="navbar-brand">
-                Web App Maker - Edit Widget
+                <span ng-if="model.form == 'edit'">Web App Maker - Edit Widget</span>
+                <span ng-if="model.form == 'new'">Web App Maker - New Widget</span>
             </a>
         </div>
     </div>
@@ -25,7 +26,7 @@
         {{model.error}}
     </div>
 
-    <ng-include src="model.getEditorTemplateUrl(model.widget.widgetType)"></ng-include>
+    <ng-include src="model.getEditorTemplateUrl(model.type)"></ng-include>
 
 
     <!-- Alternative Method -->
@@ -44,11 +45,19 @@
         <!--</div>-->
     <!--</div>-->
 
-    <a class="btn btn-success btn-block"
+    <a ng-if="model.form == 'new'"
+       class="btn btn-primary btn-block"
+       ng-click="model.createWidget(model.widget)">
+        Create
+    </a>
+
+    <a ng-if="model.form == 'edit'"
+       class="btn btn-success btn-block"
        ng-click="model.updateWidget(model.widget)">
         Update
     </a>
-    <a class="btn btn-danger btn-block"
+    <a ng-if="model.form == 'edit'"
+       class="btn btn-danger btn-block"
        ng-click="model.deleteWidget(model.widget._id)">
         Delete
     </a>

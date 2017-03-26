@@ -20,6 +20,10 @@
         vm.createPage = createPage;
 
         function createPage(newPage) {
+            if (!newPage || !newPage.name) {
+                vm.error = "The 'name' field is required for submission";
+                return;
+            }
             var promise = PageService.createPage(newPage, vm.websiteId);
             promise.then(function(response) {
                 if (response.status == 200) {
