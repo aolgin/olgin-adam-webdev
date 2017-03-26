@@ -13,7 +13,8 @@ module.exports = function (model) {
         findWebsiteById: findWebsiteById,
         findWebsiteByName: findWebsiteByName,
         findPagesForWebsite: findPagesForWebsite,
-        // cascadeDelete: cascadeDelete,
+        removeWebsitesByUserId: removeWebsitesByUserId,
+        removePageFromWebsite: removePageFromWebsite,
         setModel: setModel
     };
     return api;
@@ -22,23 +23,34 @@ module.exports = function (model) {
         model = _model;
     }
 
-    // TODO: For potential future use
-    // function cascadeDelete(wid) {
-    //     var deferred = q.defer();
-    //     // Currently just a pseudo-code implementation
-    //     for (page in pages) {
-    //         var pid = page._id;
-    //         model.pageModel.cascadeDelete(pid)
-    //         model.pageModel.remove(pid);
-    //         WebsiteModel.update({
-    //             _id: wid,
-    //         },
-    //             pages: removePageIdFromArray
-    //         )
-    //     }
-    //     return deferred.promise;
-    //
-    // }
+    function removeWebsitesByUserId(uid) {
+        return WebsiteModel.remove({_user: uid});
+    }
+
+    function removePageFromWebsite(page) {
+        var wid = page._website;
+        return WebsiteModel.findById(wid)
+            .then(function (websiteObj) {
+                websiteObj.pages.pull(page);
+                return websiteObj.save();
+            }, function (err) {
+                console.log(err);
+            });
+    }
+
+    function removeWebsite(wid) {
+        // Cascade Deletes
+        model.widgetModel.removeWidgetsByWebsiteId(wid);
+        model.pageModel.removePagesByWebsiteId(wid);
+        return WebsiteModel.findById(wid)
+            .then(function (siteObj) {
+                model.userModel
+                    .removeWebsiteFromUser(siteObj)
+                    .then(function (response) {
+                        return WebsiteModel.remove({_id: wid});
+                    });
+            });
+    }
 
     function findPagesForWebsite(wid) {
         return WebsiteModel
@@ -53,10 +65,6 @@ module.exports = function (model) {
 
     function findWebsiteById(wid) {
         return WebsiteModel.findById(wid);
-    }
-
-    function removeWebsite(wid) {
-        return WebsiteModel.remove({_id: wid});
     }
 
     function updateWebsite(wid, site) {

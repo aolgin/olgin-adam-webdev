@@ -16,12 +16,27 @@ module.exports = function (model) {
         findIndexById: findIndexById,
         findWidgetByName: findWidgetByName,
         numWidgetsByPage: numWidgetsByPage,
+        removeWidgetsByUserId: removeWidgetsByUserId,
+        removeWidgetsByWebsiteId: removeWidgetsByWebsiteId,
+        removeWidgetsByPageId: removeWidgetsByPageId,
         setModel: setModel
     };
     return api;
 
     function setModel(_model) {
         model = _model;
+    }
+
+    function removeWidgetsByUserId(uid) {
+        return WidgetModel.remove({_user: uid});
+    }
+
+    function removeWidgetsByWebsiteId(wid) {
+        return WidgetModel.remove({_website: wid});
+    }
+
+    function removeWidgetsByPageId(pid) {
+        return WidgetModel.remove({_page: pid});
     }
 
     function findWidgetByName(name) {
@@ -77,23 +92,31 @@ module.exports = function (model) {
     //     return true;
     // }
 
+    // TODO needs to remove from the relevant page as well
     function removeWidget(wgid) {
-        return WidgetModel.remove({ _id: wgid });
+        return WidgetModel.findById(wgid)
+            .then(function (widgetObj) {
+                model.pageModel
+                    .removeWidgetFromPage(widgetObj)
+                    .then(function (response) {
+                        return WidgetModel.remove({_id: wgid});
+                    });
+            });
+        // return WidgetModel.remove({ _id: wgid });
     }
 
     // TODO needs some reworking
-    // in this stage, this may overwrite may attributes
     function updateWidget(wgid, widget) {
         // A rather ugly approach, but I'm unsure how else to approach this
         // at the moment. Will return to later.
         switch (widget.widgetType) {
             case "HEADING":
+                if (widget.size < 1 || widget.size > 6) { widget.size = 3; }
                 return WidgetModel.update({ _id: wgid },
                     {
                         name: widget.name,
                         text: widget.text,
-                        size: widget.size,
-                        justCreated: false
+                        size: widget.size
                     }
                 );
             case "TEXT":
@@ -103,16 +126,14 @@ module.exports = function (model) {
                         text: widget.text,
                         rows: widget.rows,
                         placeholder: widget.placeholder,
-                        formatted: widget.formatted,
-                        justCreated: false
+                        formatted: widget.formatted
                     }
                 );
             case "HTML":
                 return WidgetModel.update({ _id: wgid },
                     {
                         name: widget.name,
-                        text: widget.text,
-                        justCreated: false
+                        text: widget.text
                     }
                 );
             case "IMAGE":
@@ -121,8 +142,7 @@ module.exports = function (model) {
                         name: widget.name,
                         text: widget.text,
                         url: widget.url,
-                        width: widget.width,
-                        justCreated: false
+                        width: widget.width
                     }
                 );
             case "YOUTUBE":
@@ -131,8 +151,7 @@ module.exports = function (model) {
                         name: widget.name,
                         text: widget.text,
                         url: widget.url,
-                        width: widget.width,
-                        justCreated: false
+                        width: widget.width
                     }
                 );
         }
@@ -143,38 +162,12 @@ module.exports = function (model) {
     }
 
     function createWidget(pid, widget) {
-        // var deferred = q.defer();
-        // WidgetModel.create(widget,
-        //     function (err, widgetObj) {
-        //         if (err) {
-        //             deferred.reject(err);
-        //         } else {
-        //             model.pageModel.findPageById(pid,
-        //                 function (err, pageObj) {
-        //                     if (err) {
-        //                         deferred.reject(err);
-        //                     } else {
-        //                         widgetObj._page = pageObj._id;
-        //                         widgetObj.justCreated = true;
-        //                         widgetObj.save();
-        //                         pageObj.widgets.push(widgetObj);
-        //                         pageObj.save();
-        //                         deferred.resolve(widgetObj._id);
-        //                     }
-        //                 }
-        //             )
-        //         }
-        //     }
-        // );
-        // return deferred.promise;
-        // 58d2fefc979785c359cb4812
         return WidgetModel.create(widget)
             .then(function(widgetObj){
                 model.pageModel
                     .findPageById(pid)
                     .then(function(pageObj){
                         widgetObj._page = pageObj._id;
-                        widgetObj.justCreated = true;
                         widgetObj.save();
                         pageObj.widgets.push(widgetObj);
                         pageObj.save();

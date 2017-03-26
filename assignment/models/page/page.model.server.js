@@ -4,6 +4,7 @@ module.exports = function (model) {
     mongoose.Promise = q.Promise;
     var PageSchema = require("./page.schema.server")();
     var PageModel  = mongoose.model("PageModel", PageSchema);
+    var ObjectId = require('mongoose').Types.ObjectId;
 
     var api = {
         createPage: createPage,
@@ -12,6 +13,9 @@ module.exports = function (model) {
         findWidgetsForPage: findWidgetsForPage,
         updatePage: updatePage,
         removePage: removePage,
+        removeWidgetFromPage: removeWidgetFromPage,
+        removePagesByUserId: removePagesByUserId,
+        removePagesByWebsiteId: removePagesByWebsiteId,
         setModel: setModel
     };
     return api;
@@ -28,8 +32,35 @@ module.exports = function (model) {
             .exec();
     }
 
+    function removePagesByUserId(uid) {
+        return PageModel.remove({_user: uid});
+    }
+
+    function removePagesByWebsiteId(wid) {
+        return PageModel.remove({_website: wid});
+    }
+
     function removePage(pid) {
-        return PageModel.remove({ _id: pid });
+        model.widgetModel.removeWidgetsByPageId(pid);
+        return PageModel.findById(pid)
+            .then(function (pageObj) {
+                model.websiteModel
+                    .removePageFromWebsite(pageObj)
+                    .then(function (response) {
+                        return PageModel.remove({_id: pid});
+                    });
+            });
+    }
+
+    function removeWidgetFromPage(widget) {
+        var pid = widget._page;
+        return PageModel.findById(pid)
+            .then(function (pageObj) {
+                pageObj.widgets.pull(widget);
+                return pageObj.save();
+            }, function (err) {
+                console.log(err);
+            });
     }
 
     function updatePage(pid, page) {

@@ -13,6 +13,7 @@ module.exports = function () {
         findUserByUsername: findUserByUsername,
         updateUser: updateUser,
         removeUser: removeUser,
+        removeWebsiteFromUser: removeWebsiteFromUser,
         updatePassword: updatePassword,
         findUserByFacebookId: findUserByFacebookId,
         setModel: setModel
@@ -21,6 +22,25 @@ module.exports = function () {
 
     function setModel(_model) {
         model = _model;
+    }
+
+    function removeWebsiteFromUser(site) {
+        var uid = site._user;
+        return UserModel.findById(uid)
+            .then(function (userObj) {
+                userObj.websites.pull(site);
+                return userObj.save();
+            }, function (err) {
+                console.log(err);
+            });
+    }
+
+    function removeUser(uid) {
+        // Cascade deletes
+        model.widgetModel.removeWidgetsByUserId(uid);
+        model.pageModel.removePagesByUserId(uid);
+        model.websiteModel.removeWebsitesByUserId(uid);
+        return UserModel.remove({_id: uid});
     }
 
     function findUserByFacebookId(facebookId) {
@@ -32,10 +52,6 @@ module.exports = function () {
             .findById(userId)
             .populate("websites", "name dateModified _user")
             .exec();
-    }
-
-    function removeUser(userId) {
-        return UserModel.remove({_id: userId});
     }
 
     function findUserByCredentials(username, password) {
