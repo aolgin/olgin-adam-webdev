@@ -84,6 +84,7 @@ module.exports = function (model) {
                     .findWebsiteById(wid)
                     .then(function(websiteObj){
                         pageObj._website = websiteObj._id;
+                        pageObj._user = websiteObj._user;
                         pageObj.save();
                         websiteObj.pages.push(pageObj);
                         return websiteObj.save();

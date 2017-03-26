@@ -168,6 +168,8 @@ module.exports = function (model) {
                     .findPageById(pid)
                     .then(function(pageObj){
                         widgetObj._page = pageObj._id;
+                        widgetObj._website = pageObj._website;
+                        widgetObj._user = pageObj._user;
                         widgetObj.save();
                         pageObj.widgets.push(widgetObj);
                         pageObj.save();
