@@ -12,10 +12,14 @@
                 deferred.resolve();
             } else {
                 deferred.reject();
-                $location.url('/error');
+                $location.url('/error?code=401');
             }
         });
         return deferred.promise;
+    };
+
+    var redirectTo404 = function($location) {
+        $location.url('/error?code=404');
     };
 
     function configuration($routeProvider, $locationProvider, $httpProvider) {
@@ -24,7 +28,9 @@
 
         $routeProvider
             .when("/error", {
-                templateUrl: 'views/user/templates/unauthorized.view.client.html'
+                templateUrl: 'views/error/templates/error.view.client.html',
+                controller: 'ErrorController',
+                controllerAs: 'model'
             })
             .when("/login",{
                 templateUrl: 'views/user/templates/login.view.client.html',
@@ -45,57 +51,71 @@
             .when("/profile/:uid/changePassword",{
                 templateUrl: 'views/user/templates/password.view.client.html',
                 controller: 'passwordController',
-                controllerAs: 'model'
+                controllerAs: 'model',
+                resolve: { loggedin: checkLoggedin }
             })
             .when("/user/:uid/website",{
                 templateUrl: 'views/website/templates/website-list.view.client.html',
                 controller: 'WebsiteListController',
-                controllerAs: 'model'
+                controllerAs: 'model',
+                resolve: { loggedin: checkLoggedin }
             })
             .when("/user/:uid/website/new",{  // order is very important here, otherwise :wid will capture this
                 templateUrl: 'views/website/templates/website-new.view.client.html',
                 controller: 'WebsiteNewController',
-                controllerAs: 'model'
+                controllerAs: 'model',
+                resolve: { loggedin: checkLoggedin }
             })
             .when("/user/:uid/website/:wid",{
                 templateUrl: 'views/website/templates/website-edit.view.client.html',
                 controller: 'WebsiteEditController',
-                controllerAs: 'model'
+                controllerAs: 'model',
+                resolve: { loggedin: checkLoggedin }
             })
             .when("/user/:uid/website/:wid/page",{
                 templateUrl: 'views/page/templates/page-list.view.client.html',
                 controller: 'PageListController',
-                controllerAs: 'model'
+                controllerAs: 'model',
+                resolve: { loggedin: checkLoggedin }
             })
             .when("/user/:uid/website/:wid/page/new",{
                 templateUrl: 'views/page/templates/page-new.view.client.html',
                 controller: 'PageNewController',
-                controllerAs: 'model'
+                controllerAs: 'model',
+                resolve: { loggedin: checkLoggedin }
             })
             .when("/user/:uid/website/:wid/page/:pid",{
                 templateUrl: 'views/page/templates/page-edit.view.client.html',
                 controller: 'PageEditController',
-                controllerAs: 'model'
+                controllerAs: 'model',
+                resolve: { loggedin: checkLoggedin }
             })
             .when("/user/:uid/website/:wid/page/:pid/widget",{
                 templateUrl: 'views/widgets/templates/widget-list.view.client.html',
                 controller: 'WidgetListController',
-                controllerAs: 'model'
+                controllerAs: 'model',
+                resolve: { loggedin: checkLoggedin }
             })
             .when("/user/:uid/website/:wid/page/:pid/widget/new",{
                 templateUrl: 'views/widgets/templates/widget-choose.view.client.html',
                 controller: 'WidgetNewController',
-                controllerAs: 'model'
+                controllerAs: 'model',
+                resolve: { loggedin: checkLoggedin }
             })
             .when("/user/:uid/website/:wid/page/:pid/widget/new/:type", {
                 templateUrl: 'views/widgets/templates/widget-edit.view.client.html',
                 controller: 'WidgetNewController',
-                controllerAs: 'model'
+                controllerAs: 'model',
+                resolve: { loggedin: checkLoggedin }
             })
             .when("/user/:uid/website/:wid/page/:pid/widget/:wgid",{
                 templateUrl: 'views/widgets/templates/widget-edit.view.client.html',
                 controller: 'WidgetEditController',
-                controllerAs: 'model'
+                controllerAs: 'model',
+                resolve: { loggedin: checkLoggedin }
+            })
+            .otherwise({
+                resolve: {errorPage: redirectTo404}
             });
 
         // $locationProvider.html5Mode(true);

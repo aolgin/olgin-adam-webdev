@@ -12,7 +12,8 @@
         init();
 
         function updatePassword(passList) {
-            if (!passList.oldPassword || !passList.newPassword || !passList.confirmPassword) {
+            console.log(passList);
+            if (!passList.currentPassword || !passList.newPassword || !passList.confirmPassword) {
                 vm.error = 'All fields required!';
                 return;
             } else if (passList.newPassword != passList.confirmPassword) {

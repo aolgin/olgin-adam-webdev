@@ -32,19 +32,6 @@
                         vm.error = "An uncaught error occurred registering your user: \n" + err.data;
                     }
                 });
-
-            // var promise = UserService.createUser(newUser);
-            // promise.then(function (response) {
-            //     var user = response.data;
-            //     if (user) { $location.url('/profile/' + user._id); }
-            // }).catch(function (err) {
-            //     var status = err.status;
-            //     if (status == 409) {
-            //         vm.error = "User with that username already exists: " + newUser.username;
-            //     } else {
-            //         vm.error = "An uncaught error occurred registering your user: \n" + err.data;
-            //     }
-            // });
         }
     }
 })();

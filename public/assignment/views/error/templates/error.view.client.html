@@ -9,10 +9,9 @@
 </nav>
 
 <div class="container-fluid">
-    <div class="alert alert-warning">
-        <span>
-            You are not authorized to view this content. If this content is yours, you can access it by logging in <a href="/assignment/index.html#/login">here</a>.
-        </span>
+    <div class="alert alert-danger">
+        <p> {{model.error}} </p>
+        <p> Click <a href="/assignment/index.html#/login">here</a> to go back to the login page. </p>
     </div>
 </div>
 

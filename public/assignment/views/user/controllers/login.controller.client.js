@@ -12,10 +12,10 @@
 
         function login(user) {
             if (!user.username || !user.password) {
-                vm.error = 'All fields required!';
+                vm.error = 'Username and Password required';
                 return;
             }
-            var promise = UserService.login(user)
+            var promise = UserService.login(user);
             promise.then(function(response) {
                     var user = response.data;
                     $rootScope.currentUser = user;
@@ -23,26 +23,12 @@
                 }).catch(function (err) {
                     console.log(err);
                     var status = err.status;
-                    if (status == 404) {
+                    if (status == 404 || status == 401) {
                         vm.error = 'No user found matching those credentials';
                     } else {
                         vm.error = 'An uncaught error occurred when logging in:\n' + err.data;
                     }
                 });
-            // var promise = UserService.findUserByCredentials(user.username, user.password);
-            // promise.then(function (response) {
-            //     var user = response.data;
-            //     if (user) {
-            //         $location.url('/profile/' + user._id);
-            //     }
-            // }).catch(function (err) {
-            //     var status = err.status;
-            //     if (status == 404) {
-            //         vm.error = 'No user found matching those credentials';
-            //     } else {
-            //         vm.error = 'An uncaught error occurred when logging in:\n' + err.data;
-            //     }
-            // });
         }
     }
 })();
