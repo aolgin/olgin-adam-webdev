@@ -9,7 +9,6 @@
         vm.websiteId = $routeParams['wid'];
         vm.pageId = $routeParams['pid'];
         vm.widgetId = $routeParams['wgid'];
-        vm.imageEditorType = "url";
         vm.form = 'edit';
 
         function init() {
@@ -18,6 +17,7 @@
                vm.widget = response.data;
                vm.type = vm.widget.widgetType;
             });
+            vm.imageEditorType = "url";
             vm.showPhotos = false;
             vm.flickrPageNum = 1;
         }
