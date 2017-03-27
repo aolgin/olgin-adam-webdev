@@ -4,7 +4,6 @@ module.exports = function (model) {
     mongoose.Promise = q.Promise;
     var PageSchema = require("./page.schema.server")();
     var PageModel  = mongoose.model("PageModel", PageSchema);
-    var ObjectId = require('mongoose').Types.ObjectId;
 
     var api = {
         createPage: createPage,
@@ -41,13 +40,17 @@ module.exports = function (model) {
     }
 
     function removePage(pid) {
-        model.widgetModel.removeWidgetsByPageId(pid);
         return PageModel.findById(pid)
             .then(function (pageObj) {
-                model.websiteModel
-                    .removePageFromWebsite(pageObj)
+                model.widgetModel.removeWidgetsByPageId(pid)
                     .then(function (response) {
-                        return PageModel.remove({_id: pid});
+                        model.websiteModel.removePageFromWebsite(pageObj)
+                            .then(function (response) {
+                                return PageModel.remove({_id: pid});
+                            },
+                            function (err) {
+                                console.log(err);
+                            });
                     });
             });
     }

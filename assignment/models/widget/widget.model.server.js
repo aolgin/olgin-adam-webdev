@@ -92,7 +92,6 @@ module.exports = function (model) {
     //     return true;
     // }
 
-    // TODO needs to remove from the relevant page as well
     function removeWidget(wgid) {
         return WidgetModel.findById(wgid)
             .then(function (widgetObj) {
@@ -102,7 +101,6 @@ module.exports = function (model) {
                         return WidgetModel.remove({_id: wgid});
                     });
             });
-        // return WidgetModel.remove({ _id: wgid });
     }
 
     // TODO needs some reworking
@@ -111,7 +109,7 @@ module.exports = function (model) {
         // at the moment. Will return to later.
         switch (widget.widgetType) {
             case "HEADING":
-                if (widget.size < 1 || widget.size > 6) { widget.size = 3; }
+                if (widget.size < 0 || widget.size > 6) { widget.size = 3; }
                 return WidgetModel.update({ _id: wgid },
                     {
                         name: widget.name,

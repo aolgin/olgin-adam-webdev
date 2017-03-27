@@ -19,8 +19,8 @@ module.exports = function(app, model) {
     app.post  ('/api/user',     auth, createUser);
     app.get   ('/api/loggedin',       loggedin);
     // app.get   ('/api/user',     auth, findAllUsers);
-    app.put   ('/api/user/:id', auth, updateUser);
-    app.delete('/api/user/:id', auth, deleteUserById);
+    app.put   ('/api/user/:uid', auth, updateUser);
+    app.delete('/api/user/:uid', auth, deleteUserById);
     app.get ('/auth/facebook', passport.authenticate('facebook', { scope : 'email' }));
     app.get('/auth/facebook/callback',
         passport.authenticate('facebook', {
@@ -94,11 +94,6 @@ module.exports = function(app, model) {
 
     function login(req, res) {
         var user = req.user;
-        // if(user && bcrypt.compareSync(password, user.password)) {
-        //     return done(null, user);
-        // } else {
-        //     return done(null, false);
-        // }
         res.json(user);
     }
 

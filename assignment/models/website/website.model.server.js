@@ -40,15 +40,20 @@ module.exports = function (model) {
 
     function removeWebsite(wid) {
         // Cascade Deletes
-        model.widgetModel.removeWidgetsByWebsiteId(wid);
-        model.pageModel.removePagesByWebsiteId(wid);
-        return WebsiteModel.findById(wid)
-            .then(function (siteObj) {
-                model.userModel
-                    .removeWebsiteFromUser(siteObj)
+        return model.widgetModel.removeWidgetsByWebsiteId(wid)
+            .then(function (response) {
+                model.pageModel.removePagesByWebsiteId(wid)
                     .then(function (response) {
-                        return WebsiteModel.remove({_id: wid});
-                    });
+                        WebsiteModel.findById(wid)
+                            .then(function (siteObj) {
+                                model.userModel.removeWebsiteFromUser(siteObj)
+                                    .then(function (response) {
+                                        return WebsiteModel.remove({_id: wid});
+                                    }, function(err) {
+                                        console.log(err);
+                                    })
+                            })
+                    })
             });
     }
 

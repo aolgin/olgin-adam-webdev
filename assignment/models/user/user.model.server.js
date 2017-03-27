@@ -37,10 +37,21 @@ module.exports = function () {
 
     function removeUser(uid) {
         // Cascade deletes
-        model.widgetModel.removeWidgetsByUserId(uid);
-        model.pageModel.removePagesByUserId(uid);
-        model.websiteModel.removeWebsitesByUserId(uid);
-        return UserModel.remove({_id: uid});
+        return model.widgetModel
+            .removeWidgetsByUserId(uid)
+            .then(function (response) {
+                model.pageModel
+                    .removePagesByUserId(uid)
+                    .then(function (response) {
+                        model.websiteModel
+                            .removeWebsitesByUserId(uid)
+                            .then(function (response) {
+                                return UserModel.remove({_id: uid});
+                            }, function(err) {
+                                console.log(err);
+                            });
+                    });
+            });
     }
 
     function findUserByFacebookId(facebookId) {
