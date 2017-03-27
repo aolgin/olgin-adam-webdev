@@ -43,16 +43,21 @@
                 return;
             }
 
-            FlickrService.searchPhotos(searchTerm, vm.flickrPageNum)
-                .then(function(response) {
-                    data = response.data.replace("jsonFlickrApi(","");
-                    data = data.substring(0, data.length - 1);
-                    data = JSON.parse(data);
-                    vm.photos = data.photos;
-                }).catch(function(err) {
-                    vm.error = "An error occurred trying to search flickr: \n" + err.data;
-                }
-            );
+            FlickrService.getFlickrApi()
+                .then(function (response) {
+                    var key = response.data;
+                    FlickrService.searchPhotos(searchTerm, vm.flickrPageNum, key)
+                        .then(function(response) {
+                            data = response.data.replace("jsonFlickrApi(","");
+                            data = data.substring(0, data.length - 1);
+                            data = JSON.parse(data);
+                            vm.photos = data.photos;
+                        }).catch(function(err) {
+                            vm.error = "An error occurred trying to search flickr: \n" + err.data;
+                        }
+                    );
+                });
+
             vm.showPhotos = true;
         }
 

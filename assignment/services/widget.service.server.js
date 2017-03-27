@@ -17,29 +17,7 @@ module.exports = function (app) {
     app.post("/api/upload", upload.single('myFile'), uploadImage);
     app.delete("/api/upload/:img", deleteImage);
 
-    var widgets = [
-        { "_id": "123", "name": "Gizmodo Heading", "widgetType": "HEADING", "pageId": "321", "size": 2, "text": "GIZMODO", "orderIndex": 0},
-        { "_id": "234", "name": "Lorem Heading1", "widgetType": "HEADING", "pageId": "321", "size": 4, "text": "Lorem ipsum", "orderIndex": 1},
-        { "_id": "345", "name": "Random Image", "text": "lorem", "widgetType": "IMAGE", "pageId": "321", "width": "100%",
-            "url": "http://lorempixel.com/400/200/", "orderIndex": 2},
-        { "_id": "456", "name": "RawHTML1", "widgetType": "HTML", "pageId": "321", "text": "<p>Lorem ipsum</p>", "orderIndex": 3},
-        { "_id": "567", "name": "Lorem Heading2", "widgetType": "HEADING", "pageId": "321", "size": 4, "text": "Lorem ipsum", "orderIndex": 4},
-        { "_id": "678", "name": "Youtube Widget1", "text": "lorem", "widgetType": "YOUTUBE", "pageId": "321", "width": "100%",
-            "url": "https://www.youtube.com/AM2Ivdi9c4E", "orderIndex": 5 },
-        { "_id": "789", "name": "RawHTML2", "widgetType": "HTML", "pageId": "321", "text": "<p>Lorem ipsum</p>", "orderIndex": 6},
-        { "_id": "6121", "name": "Gizmodo Heading5", "widgetType": "HEADING", "pageId": "58d07b96127bc3526c90a81b", "size": 3, "text": "UIO", "orderIndex": 0},
-        { "_id": "7651", "name": "Gizmodo Heading6", "widgetType": "HEADING", "pageId": "58d07b96127bc3526c90a81b", "size": 2, "text": "GIZMODAI", "orderIndex": 1},
-        { "_id": "8765", "name": "Gizmodo Heading2", "widgetType": "HEADING", "pageId": "58d07b96127bc3526c90a81b", "size": 2, "text": "GIZMODO", "orderIndex": 2}
-    ];
-
     // Helper Functions
-
-    // MongoDB widget creation calls
-    //
-    // db.widget.insert({"widgetType": "HEADING", "orderIndex": 0, "justCreated": false, "name": "Sample Heading", "size": 2, "text": "Sample Heading Text", _page: ObjectId("58d3109396d73745b8a3f765")})
-    // db.widget.insert({"widgetType": "IMAGE", "orderIndex": 2, "justCreated": false, "name": "Sample Image", "text": "Sample Image Text", "url": "https://static.pexels.com/photos/7720/night-animal-dog-pet.jpg", "width": "100%", _page: ObjectId("58d3109396d73745b8a3f765")})
-    // db.widget.insert({"widgetType": "HTML", "orderIndex": 1, "justCreated": false, "name": "Sample HTML", "text": "<p>Here is some sample HTML</p>", _page: ObjectId("58d3109396d73745b8a3f765")})
-    // db.page.update({_id: ObjectId("58d3109396d73745b8a3f765")}, {$push: { widgets: {$each: [ObjectId("58d310e1979785c359cb4813"), ObjectId("58d310f5979785c359cb4814"), ObjectId("58d310ff979785c359cb4815")]}}})
 
     // TODO potentially irrelevant function now. Determine whether to remove
     function findIndexById(wgid) {
