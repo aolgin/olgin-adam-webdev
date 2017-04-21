@@ -28,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // require("./lectures/mongo/movies")(app);
 // require("./lectures/postgres/movies/services/actor.service.server")(app);
 // require("./lectures/passportjs/services/user.service.server")(app);
+// require('./lectures/ejs/hello');
 
 // configure a public directory to host static content
 app.use(express.static(__dirname + '/public'));

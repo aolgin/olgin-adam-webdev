@@ -19,6 +19,7 @@ module.exports = function (model) {
         removeWidgetsByUserId: removeWidgetsByUserId,
         removeWidgetsByWebsiteId: removeWidgetsByWebsiteId,
         removeWidgetsByPageId: removeWidgetsByPageId,
+        updateAllOrdering: updateAllOrdering,
         setModel: setModel
     };
     return api;
@@ -65,32 +66,67 @@ module.exports = function (model) {
     // Could cause potential issues with viewing widgets in order since there
     // is no currently no other form of shifting going on
     function reorderWidget(pid, start, end) {
-        return WidgetModel.update(
+        WidgetModel.update(
             {
                 _page: pid,
                 orderIndex: start
-            }, { orderIndex: end }
-        );
+            },
+            {
+                orderIndex: end
+            });//,
+            // function (err, response) {
+            //     if (err) { console.log(err); }
+            //     if (start > end) {
+            //         return updateAllOrdering(pid, end, 1)
+            //     } else if (start < end) {
+            //         return updateAllOrdering(pid, end, -1);
+            //     }
+            // });
+
+        // return WidgetModel.update(
+        //     {
+        //         _page: pid,
+        //         orderIndex: start
+        //     }, { orderIndex: end }
+        // );
     }
 
     function findWidgetsForPage(pid) {
         return model.pageModel
-            .findById(pid)
+            .findPageById(pid)
             .populate("widgets")
             .exec();
     }
 
-    // function updateAllOrdering(pid) {
-    //     var wlist = findWidgetsForPage(pid);
-    //     var sorted = _.sortBy(wlist, 'orderIndex');
-    //     for (var i = 0; i < sorted.length; i++) {
-    //         var wgid = sorted[i]._id;
-    //         WidgetModel.update({_id: wgid},
-    //             {orderIndex: i}
-    //         );
-    //     }
-    //     return true;
-    // }
+    function updateAllOrdering(pid, end, dir) {
+        return findWidgetsForPage(pid)
+            .then(function (page) {
+                var sorted = _.sortBy(page.widgets, 'orderIndex');
+                switch(dir) {
+                    case -1:
+                        for (var i = end; i >= 0; i--) {
+                            var wgid = sorted[i]._id;
+                            WidgetModel.update(
+                                {_id: wgid},
+                                {orderIndex: i}
+                            );
+                        }
+                        console.log("Looped through!");
+                        return 'OK';
+                    case 1:
+                        for (var i = end; i < sorted.length; i++) {
+                            var wgid = sorted[i]._id;
+                            WidgetModel.update(
+                                {_id: wgid},
+                                {orderIndex: i}
+                            );
+                        }
+                        console.log("Looped through!");
+                        return 'OK';
+                }
+
+            });
+    }
 
     function removeWidget(wgid) {
         return WidgetModel.findById(wgid)
